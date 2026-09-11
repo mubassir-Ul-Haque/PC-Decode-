@@ -1,0 +1,8 @@
+{
+  "name": "PCDecode main v1",
+  "description": "Professional PC Repair, Deep Cleaning, Thermal Maintenance & Hardware Diagnostics with Home Service in Dhaka & Nationwide Courier across Bangladesh.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
