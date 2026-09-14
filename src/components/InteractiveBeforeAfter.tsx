@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, MouseEvent, TouchEvent } from 'react';
-import { ChevronsLeftRight, MoveHorizontal } from 'lucide-react';
+import { ChevronsLeftRight } from 'lucide-react';
 
 interface InteractiveBeforeAfterProps {
   beforeImg: string;
@@ -33,12 +33,25 @@ export function InteractiveBeforeAfter({
     setSliderPosition(percentage);
   }, []);
 
-  const handleMouseDown = () => setIsDragging(true);
-  const handleMouseUp = () => setIsDragging(false);
+  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    handleMove(e.clientX);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!isDragging) return;
     handleMove(e.clientX);
+  };
+
+  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    if (e.touches.length > 0) {
+      handleMove(e.touches[0].clientX);
+    }
   };
 
   const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
@@ -55,15 +68,17 @@ export function InteractiveBeforeAfter({
     <div className="w-full select-none" id={title ? `slider-${title.toLowerCase().replace(/\s+/g, '-')}` : undefined}>
       <div
         ref={containerRef}
-        className={`relative w-full ${heightClass} rounded-xl overflow-hidden border border-[#e8e6e1] bg-[#121316] cursor-ew-resize group`}
+        className={`relative w-full ${heightClass} rounded-2xl overflow-hidden border border-[#e8e6e1] bg-[#1a1c23] cursor-ew-resize group`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
+        onTouchEnd={handleMouseUp}
         onClick={handleClick}
       >
-        {/* After Image (Background) */}
+        {/* After Image (Full background) */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
           <img
             src={afterImg}
@@ -71,12 +86,12 @@ export function InteractiveBeforeAfter({
             className="w-full h-full object-cover"
             loading="lazy"
           />
-          <div className="absolute top-3 right-3 bg-[#d9ff3d] text-[#0d0f12] font-mono text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm tracking-wide">
+          <div className="absolute top-3.5 right-3.5 bg-[#d9ff3d] text-[#0d0f12] font-mono text-xs font-bold px-3 py-1 rounded-full shadow-md">
             {afterLabel}
           </div>
         </div>
 
-        {/* Before Image (Clipped Overlay) */}
+        {/* Before Image (Clipped Left Layer) */}
         <div
           className="absolute inset-y-0 left-0 overflow-hidden"
           style={{ width: `${sliderPosition}%` }}
@@ -94,26 +109,26 @@ export function InteractiveBeforeAfter({
               className="absolute inset-0 w-full h-full object-cover"
               loading="lazy"
             />
-            <div className="absolute top-3 left-3 bg-[#0d0f12]/90 text-white border border-white/20 font-mono text-xs font-medium px-2.5 py-1 rounded-full shadow-sm">
+            <div className="absolute top-3.5 left-3.5 bg-[#0d0f12]/80 text-white font-mono text-xs font-bold px-3 py-1 rounded-full shadow-md">
               {beforeLabel}
             </div>
           </div>
         </div>
 
-        {/* Divider line & handle */}
+        {/* Vertical Divider Handle */}
         <div
-          className="absolute inset-y-0 w-0.5 bg-[#d9ff3d] shadow-[0_0_12px_rgba(217,255,61,0.7)] flex items-center justify-center pointer-events-none"
+          className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)] cursor-ew-resize"
           style={{ left: `${sliderPosition}%` }}
         >
-          <div className="w-8 h-8 rounded-full bg-[#0d0f12] text-[#d9ff3d] border-2 border-[#d9ff3d] flex items-center justify-center shadow-md transform -translate-x-1/2 group-hover:scale-110 transition-transform">
+          {/* Handle Grip Disc */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0d0f12] text-[#d9ff3d] border-2 border-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
             <ChevronsLeftRight className="w-4 h-4" />
           </div>
         </div>
 
-        {/* Drag Helper Pill */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none bg-[#0d0f12]/80 backdrop-blur-sm border border-white/10 text-white/90 text-[11px] font-medium px-3 py-1 rounded-full flex items-center gap-1.5 shadow">
-          <MoveHorizontal className="w-3 h-3 text-[#d9ff3d]" />
-          <span>Drag to compare ({sliderPosition}%)</span>
+        {/* Subtle Hint */}
+        <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white/80 font-mono text-[10px] px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          Drag to compare
         </div>
       </div>
     </div>

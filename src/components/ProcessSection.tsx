@@ -1,47 +1,49 @@
-import { MessageSquare, MapPin, Wrench, CheckCircle2 } from 'lucide-react';
+import { MessageSquare, Search, CheckSquare, Wrench } from 'lucide-react';
 
 export function ProcessSection() {
   const steps = [
     {
       num: '01',
       icon: MessageSquare,
-      title: 'Tell Us What\'s Wrong',
+      title: "Tell Us What's Wrong",
+      desc: "Describe what your PC is doing through our booking form or WhatsApp. Tell us the symptoms in your own words.",
+      subtext: 'Home visit across Dhaka or nationwide courier intake.',
       banglaQuotes: [
-        '"ভাই PC অন হয় কিন্তু display আসে না."',
-        '"ভাই game খেললে অনেক গরম হয়."',
+        '"PC চালু হয় কিন্তু ডিসপ্লে আসে না"',
+        '"গেম শুরু করলেই ফ্যান চিৎকার করে"',
       ],
-      desc: 'Whatever the problem is, tell us what you\'re experiencing.',
     },
     {
       num: '02',
-      icon: MapPin,
-      title: 'We Check It',
-      desc: 'For Dhaka customers, our technician comes to your location.',
-      subtext: 'Outside Dhaka? Ship safely via our secure courier intake flow.',
+      icon: Search,
+      title: 'We Inspect It',
+      desc: 'Our technician conducts on-site diagnostic checks in Dhaka or admits your PC onto our lab test bench.',
+      subtext: 'Voltage rail testing, memory scans, and thermal logging.',
     },
     {
       num: '03',
-      icon: Wrench,
-      title: 'We Fix What Needs Fixing',
-      desc: 'We explain the issue and carry out the required service or repair.',
-      subtext: 'Clear pricing upfront before doing any hardware replacements.',
+      icon: CheckSquare,
+      title: 'You Approve the Work',
+      desc: 'We explain what we found in plain words before any paid repair or part replacement. No surprise bills. No guessing.',
+      subtext: 'You decide whether to proceed with the recommended repair.',
+      highlight: true,
     },
     {
       num: '04',
-      icon: CheckCircle2,
-      title: 'We Test Everything',
-      desc: 'Because "চালু হচ্ছে" and "properly working" are two different things.',
-      subtext: '30-minute gaming/render stress tests + 30-day repair warranty certificate.',
+      icon: Wrench,
+      title: 'We Repair + Test',
+      desc: 'We carry out the service and stress-test the system under heavy load before return. "PC চালু হচ্ছে" আর "properly working" — দুইটা আলাদা জিনিস।',
+      subtext: 'Returned safely with documented service summary and 30-day warranty.',
     },
   ];
 
   return (
-    <section className="w-full bg-[#f6f5f0] py-16 md:py-24 border-b border-[#e8e6e1]">
+    <section id="process" className="w-full bg-[#f6f5f0] py-16 md:py-24 border-b border-[#e8e6e1]">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
         
         {/* Header Block */}
         <div className="max-w-[760px]">
-          <span className="inline-block text-xs font-bold tracking-wider text-[#6f6e6a] uppercase">
+          <span className="inline-block text-xs font-mono font-bold tracking-wider text-[#6f6e6a] uppercase">
             HOW IT WORKS
           </span>
 
@@ -49,6 +51,10 @@ export function ProcessSection() {
             No complicated process. <br className="hidden sm:inline" />
             Just four simple steps.
           </h2>
+
+          <p className="text-base sm:text-lg text-[#4a4d53] mt-3 leading-relaxed">
+            Transparent from the initial diagnosis to final benchmark testing. No repairs begin without your clear confirmation.
+          </p>
         </div>
 
         {/* 4 Steps Grid */}
@@ -58,11 +64,17 @@ export function ProcessSection() {
             return (
               <div
                 key={step.num}
-                className="bg-white rounded-2xl border border-[#e8e6e1] p-6 flex flex-col justify-between shadow-sm relative overflow-hidden"
+                className={`bg-white rounded-2xl border p-6 flex flex-col justify-between shadow-xs relative overflow-hidden transition-all ${
+                  step.highlight
+                    ? 'border-[#0d0f12] ring-1 ring-[#0d0f12]/10 bg-white'
+                    : 'border-[#e8e6e1] hover:border-[#cfccc3]'
+                }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">
-                    <div className="w-10 h-10 rounded-lg bg-[#0d0f12] text-[#d9ff3d] flex items-center justify-center font-bold">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold ${
+                      step.highlight ? 'bg-[#d9ff3d] text-[#0d0f12]' : 'bg-[#0d0f12] text-[#d9ff3d]'
+                    }`}>
                       <IconComp className="w-5 h-5 stroke-[2.2]" />
                     </div>
                     <span className="font-mono text-2xl font-bold text-[#cfccc3]">
@@ -76,7 +88,7 @@ export function ProcessSection() {
 
                   {/* Bangla quotes if step 1 */}
                   {step.banglaQuotes && (
-                    <div className="my-3 space-y-1.5 bg-[#f6f5f0] p-3 rounded-lg border border-[#e8e6e1] text-xs font-medium text-[#2d3036]">
+                    <div className="my-3 space-y-1 bg-[#f6f5f0] p-2.5 rounded-lg border border-[#e8e6e1] text-[11px] font-medium text-[#2d3036]">
                       {step.banglaQuotes.map((q) => (
                         <p key={q} className="italic text-[#0d0f12]">
                           {q}
@@ -90,7 +102,7 @@ export function ProcessSection() {
                   </p>
 
                   {step.subtext && (
-                    <p className="text-xs text-[#6f6e6a] mt-2">
+                    <p className="text-xs text-[#6f6e6a] mt-2.5 pt-2 border-t border-[#f0eee6]">
                       {step.subtext}
                     </p>
                   )}

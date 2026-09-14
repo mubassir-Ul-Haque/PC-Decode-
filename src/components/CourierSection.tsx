@@ -63,7 +63,7 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
           </h2>
 
           <p className="text-base sm:text-lg text-[#4a4d53] mt-5 leading-relaxed">
-            If you're outside Dhaka, you don't have to give up on professional PC service. Send your PC to our Banani Diagnostic Lab through courier. We'll diagnose it, repair or service it, conduct stress tests, and courier it back to your doorstep.
+            If you're outside Dhaka, you don't have to settle for guesswork. Send your PC or individual components to our Uttara Diagnostic Lab via courier. We'll diagnose the system, explain our findings, test thoroughly under synthetic stress, and courier it safely back to your doorstep.
           </p>
         </div>
 
@@ -74,7 +74,7 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
             return (
               <div
                 key={item.step}
-                className="bg-white rounded-2xl border border-[#e8e6e1] p-6 flex flex-col justify-between shadow-sm relative overflow-hidden group hover:border-[#cfccc3] transition-all"
+                className="bg-white rounded-2xl border border-[#e8e6e1] p-6 flex flex-col justify-between shadow-xs relative overflow-hidden group hover:border-[#cfccc3] transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -120,8 +120,8 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
                 <h3 className="font-heading text-xl sm:text-2xl font-bold text-white">
                   {DUMMY_COURIER_HUB.labName}
                 </h3>
-                <p className="text-xs sm:text-sm text-[#c0c5d4] mt-1.5 leading-relaxed">
-                  <strong>Consignee / Recipient:</strong> {DUMMY_COURIER_HUB.recipientName}<br />
+                <p className="text-xs sm:text-sm text-[#c0c5d4] mt-1.5 leading-relaxed font-mono">
+                  <strong>Consignee:</strong> {DUMMY_COURIER_HUB.recipientName}<br />
                   <strong>Address:</strong> {DUMMY_COURIER_HUB.addressLine1}, {DUMMY_COURIER_HUB.addressLine2}, {DUMMY_COURIER_HUB.city}-{DUMMY_COURIER_HUB.postalCode}, Bangladesh<br />
                   <strong>Landmark:</strong> {DUMMY_COURIER_HUB.landmark}
                 </p>
@@ -134,7 +134,7 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
                 </div>
                 <div className="flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[#d9ff3d]" />
-                  <span>Banani Commercial Area, Dhaka</span>
+                  <span>Sector 3, Uttara, Dhaka</span>
                 </div>
               </div>
 
@@ -165,8 +165,8 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
                 className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm py-3 px-4 rounded-xl border border-white/15 flex items-center justify-center gap-2 transition-all cursor-pointer"
                 id="courier-copy-hub-address"
               >
-                {copiedHub ? <Check className="w-4 h-4 text-[#d9ff3d]" /> : <Copy className="w-4 h-4" />}
-                <span>{copiedHub ? 'Address Copied to Clipboard!' : 'Copy Hub Address for Courier'}</span>
+                {copiedHub ? <Check className="w-4 h-4 text-[#d9ff3d]" /> : <Copy className="w-4 h-4 text-white" />}
+                <span>{copiedHub ? 'Hub Address Copied!' : 'Copy Hub Address'}</span>
               </button>
 
               <button
@@ -175,7 +175,7 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
                 className="w-full bg-[#d9ff3d] hover:bg-[#cbf229] text-black font-heading font-bold text-xs sm:text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer active:scale-95"
                 id="courier-book-now"
               >
-                <span>Book Courier Intake</span>
+                <span>Send Your PC</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -199,10 +199,10 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
             </div>
             <div>
               <h4 className="font-heading text-base sm:text-lg font-bold text-[#0d0f12]">
-                Worried about courier handling?
+                Worried about courier transit safety?
               </h4>
               <p className="text-xs sm:text-sm text-[#54575f] mt-1 max-w-[620px]">
-                We guide you on removing heavy GPUs (or bracing them), packaging tempered glass, and choosing trusted courier hubs (Sundarban, RedX, Steadfast, SA Paribahan).
+                We guide you through removing heavy GPUs, securing internal air coolers, and wrapping tempered glass. Every arrived parcel is unboxed on high-res camera with video sent straight to your WhatsApp.
               </p>
             </div>
           </div>
@@ -218,7 +218,7 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
               onClick={onStartCourier}
               className="bg-[#0d0f12] hover:bg-[#202228] text-white text-xs sm:text-sm font-semibold rounded-full px-6 py-3 flex items-center gap-2 shadow cursor-pointer transition-all"
             >
-              <span>Start Courier Service</span>
+              <span>Send Your PC</span>
               <ArrowRight className="w-4 h-4 text-[#d9ff3d]" />
             </button>
           </div>

@@ -44,10 +44,10 @@ export function FinalCTASection({ onBookClick, onTalkClick }: FinalCTASectionPro
           <button
             onClick={onTalkClick}
             className="bg-white/10 hover:bg-white/20 text-white font-heading font-semibold text-base rounded-full px-7 py-4 border border-white/20 flex items-center gap-2.5 transition-all cursor-pointer"
-            id="final-cta-talk-to-pcdecode"
+            id="final-cta-whatsapp-us"
           >
             <MessageSquare className="w-4 h-4 text-[#d9ff3d]" />
-            <span>Talk to PCDecode</span>
+            <span>WhatsApp Us</span>
           </button>
         </div>
 

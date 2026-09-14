@@ -1,30 +1,26 @@
-import { Clock, Home, ShieldCheck, Truck } from 'lucide-react';
+import { Search, Home, CheckSquare, Truck } from 'lucide-react';
 
 export function TrustStrip() {
   const trustItems = [
     {
-      icon: Clock,
-      title: '24/7 Support',
-      desc: 'Because PCs don\'t always choose office hours to misbehave.',
-      tag: 'Anytime',
+      icon: Search,
+      title: 'Diagnose First',
+      desc: 'We identify what is actually wrong before suggesting parts or repairs.',
     },
     {
       icon: Home,
-      title: 'Home Service',
-      desc: 'We come to your doorstep across Dhaka.',
-      tag: 'All Dhaka',
+      title: 'Home Service in Dhaka',
+      desc: 'Technicians come to your location with diagnostic and maintenance equipment.',
     },
     {
-      icon: ShieldCheck,
-      title: '30-Day Warranty',
-      desc: 'If we fix it, we stand behind the work.',
-      tag: 'Guaranteed',
+      icon: CheckSquare,
+      title: 'Customer Approval',
+      desc: 'Clear explanation and pricing upfront. No work begins without your green light.',
     },
     {
       icon: Truck,
       title: 'Nationwide Courier',
-      desc: 'Outside Dhaka? Your PC can still reach us.',
-      tag: 'All Bangladesh',
+      desc: 'Outside Dhaka? Safe courier intake and return delivery across 64 districts.',
     },
   ];
 
@@ -32,7 +28,7 @@ export function TrustStrip() {
     <section className="w-full bg-[#0d0f12] text-white py-8 border-y border-[#26282e]">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {trustItems.map((item, index) => {
+          {trustItems.map((item) => {
             const IconComponent = item.icon;
             return (
               <div

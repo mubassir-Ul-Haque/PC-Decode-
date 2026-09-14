@@ -69,7 +69,7 @@ export function WarrantyTrustSection() {
 
                 <div className="mt-6 pt-3 border-t border-[#e8e6e1] flex items-center gap-1.5 text-xs font-mono font-medium text-emerald-700">
                   <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-                  <span>PCDecode Guarantee</span>
+                  <span>Documented Service Standard</span>
                 </div>
               </div>
             );

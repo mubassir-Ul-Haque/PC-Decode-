@@ -20,20 +20,26 @@ export function BookingConfirmationModal({ booking, onClose }: BookingConfirmati
     setTimeout(() => setCopiedHub(false), 2500);
   };
 
+  const getModeLabel = () => {
+    if (booking.serviceMode === 'home') return 'Home Service (Dhaka)';
+    return 'Courier Service (Outside Dhaka)';
+  };
+
   const whatsappMessage = encodeURIComponent(
     `Hello PCDecode! I have submitted a service request:\n` +
     `Ticket ID: ${ticketId}\n` +
     `Name: ${booking.name}\n` +
     `Phone: ${booking.phone}\n` +
-    `Mode: ${booking.serviceMode === 'home' ? 'Home Service in Dhaka' : 'Courier Outside Dhaka'}\n` +
+    `Mode: ${getModeLabel()}\n` +
     `Location: ${booking.location}\n` +
     (booking.detailedAddress ? `Address: ${booking.detailedAddress}\n` : '') +
     (booking.systemType ? `Form Factor: ${booking.systemType}\n` : '') +
+    (booking.pcSpecs ? `PC Specs: ${booking.pcSpecs}\n` : '') +
     (booking.courierPartner ? `Courier: ${booking.courierPartner}\n` : '') +
     (booking.courierTrackingNumber ? `Tracking No: ${booking.courierTrackingNumber}\n` : '') +
     `Service: ${booking.serviceType}\n` +
     `Issue: ${booking.problemDescription}\n` +
-    `Preferred Date: ${booking.preferredDate} (${booking.preferredTime})`
+    (booking.preferredDate ? `Preferred Date: ${booking.preferredDate} (${booking.preferredTime})\n` : '')
   );
 
   return (
@@ -56,18 +62,17 @@ export function BookingConfirmationModal({ booking, onClose }: BookingConfirmati
           </div>
           <div>
             <span className="font-mono text-xs font-bold text-emerald-800 uppercase bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-              Request Logged • Ticket #{ticketId}
+              Request Received • Ticket #{ticketId}
             </span>
             <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#0d0f12] mt-1">
-              We're On It, {booking.name.split(' ')[0]}!
+              Thank you, {booking.name.split(' ')[0]}!
             </h3>
           </div>
         </div>
 
         <p className="text-xs sm:text-sm text-[#4e5158] mt-2 leading-relaxed">
-          {booking.serviceMode === 'home'
-            ? 'Our senior diagnostic technician will phone you to confirm your exact Dhaka address and arrival time window.'
-            : 'Your courier service request is initiated! Send your parcel to our Banani Intake Hub below.'}
+          {booking.serviceMode === 'home' && 'Our technician will call you to confirm your address and schedule the arrival slot in Dhaka.'}
+          {booking.serviceMode === 'courier' && 'Courier request logged. Please pack your PC carefully and dispatch to our Uttara Hub below.'}
         </p>
 
         {/* SPECIAL COURIER HUB BOX FOR COURIER BOOKINGS */}
@@ -88,16 +93,16 @@ export function BookingConfirmationModal({ booking, onClose }: BookingConfirmati
               </button>
             </div>
 
-            <div className="text-xs text-[#c6cad5] leading-relaxed">
-              <div className="font-bold text-white text-sm">{DUMMY_COURIER_HUB.labName}</div>
+            <div className="text-xs text-[#c6cad5] leading-relaxed font-mono">
+              <div className="font-bold text-white text-sm font-heading">{DUMMY_COURIER_HUB.labName}</div>
               <div>Attn: {DUMMY_COURIER_HUB.recipientName}</div>
               <div>Address: {DUMMY_COURIER_HUB.addressLine1}, {DUMMY_COURIER_HUB.addressLine2}, {DUMMY_COURIER_HUB.city}-{DUMMY_COURIER_HUB.postalCode}</div>
               <div>Landmark: {DUMMY_COURIER_HUB.landmark}</div>
-              <div>Hub Phone: <span className="text-[#d9ff3d] font-mono font-bold">{DUMMY_COURIER_HUB.phone}</span></div>
+              <div>Lab Phone: <span className="text-[#d9ff3d] font-bold">{DUMMY_COURIER_HUB.phone}</span></div>
             </div>
 
             <div className="pt-1.5 border-t border-white/10 text-[11px] text-[#9398a8]">
-              💡 <em>Please write Ticket #{ticketId} & your mobile number on the parcel box.</em>
+              💡 <em>Please write Ticket #{ticketId} & your mobile number on the parcel box exterior.</em>
             </div>
           </div>
         )}
@@ -111,7 +116,7 @@ export function BookingConfirmationModal({ booking, onClose }: BookingConfirmati
           <div className="flex justify-between border-b border-[#e8e6e1] pb-1.5">
             <span className="text-[#6f6e6a]">Service Mode:</span>
             <span className="font-bold text-[#0d0f12]">
-              {booking.serviceMode === 'home' ? 'Home Service (Dhaka)' : 'Nationwide Courier'}
+              {getModeLabel()}
             </span>
           </div>
           {booking.systemType && (
@@ -134,12 +139,14 @@ export function BookingConfirmationModal({ booking, onClose }: BookingConfirmati
             <span className="text-[#6f6e6a]">Contact Phone:</span>
             <span className="font-bold text-[#0d0f12]">{booking.phone}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-[#6f6e6a]">Slot:</span>
-            <span className="font-bold text-[#0d0f12]">
-              {booking.preferredDate} • {booking.preferredTime.split(' ')[0]}
-            </span>
-          </div>
+          {booking.preferredDate && (
+            <div className="flex justify-between">
+              <span className="text-[#6f6e6a]">Preferred Slot:</span>
+              <span className="font-bold text-[#0d0f12]">
+                {booking.preferredDate} • {booking.preferredTime}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* 30-Day Warranty Reminder */}

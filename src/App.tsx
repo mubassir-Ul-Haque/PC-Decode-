@@ -4,9 +4,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TrustStrip } from './components/TrustStrip';
 import { ProblemIntro } from './components/ProblemIntro';
-import { PCPersonaQuiz } from './components/PCPersonaQuiz';
 import { ServicesSection } from './components/ServicesSection';
-import { PCHealthScoreCalculator } from './components/PCHealthScoreCalculator';
 import { WhyUsSection } from './components/WhyUsSection';
 import { ResultsSection } from './components/ResultsSection';
 import { ProcessSection } from './components/ProcessSection';
@@ -50,7 +48,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#0d0f12] flex flex-col font-sans selection:bg-[#d9ff3d] selection:text-black">
       
-      {/* 01. NAVBAR */}
+      {/* 01. NAVBAR (Rounded Glassmorphic with 2 CTAs) */}
       <Navbar onBookClick={() => scrollToBooking()} />
 
       <main className="flex-1">
@@ -63,21 +61,11 @@ export default function App() {
         {/* 03. TRUST STRIP */}
         <TrustStrip />
 
-        {/* 04. PROBLEM INTRO */}
+        {/* 04. PROBLEM INTRO / SYMPTOMS */}
         <ProblemIntro onBookClick={() => scrollToBooking('Hardware Diagnostics')} />
-
-        {/* 04B. PC PERSONA QUIZ */}
-        <PCPersonaQuiz
-          onSelectService={(serviceName) => scrollToBooking(serviceName)}
-        />
 
         {/* 05. SERVICES */}
         <ServicesSection
-          onSelectService={(serviceName) => scrollToBooking(serviceName)}
-        />
-
-        {/* 05B. PC HEALTH SCORE CALCULATOR */}
-        <PCHealthScoreCalculator
           onSelectService={(serviceName) => scrollToBooking(serviceName)}
         />
 

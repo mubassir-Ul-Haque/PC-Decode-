@@ -8,7 +8,18 @@ interface NavbarProps {
 export function Navbar({ onBookClick }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [callDropdownOpen, setCallDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 30);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -22,11 +33,12 @@ export function Navbar({ onBookClick }: NavbarProps) {
   }, []);
 
   const navLinks = [
+    { label: 'Problems', href: '#problems' },
     { label: 'Services', href: '#services' },
-    { label: 'Quiz', href: '#quiz' },
-    { label: 'Health Score', href: '#health-score' },
     { label: 'Why Us', href: '#why-us' },
-    { label: 'Courier Hub', href: '#courier' },
+    { label: 'Proof', href: '#results' },
+    { label: 'How It Works', href: '#process' },
+    { label: 'Courier', href: '#courier' },
     { label: 'Reviews', href: '#reviews' },
   ];
 
@@ -40,15 +52,21 @@ export function Navbar({ onBookClick }: NavbarProps) {
   };
 
   return (
-    <div className="sticky top-2 sm:top-3 z-50 w-full px-3 sm:px-6 pointer-events-none">
+    <div className="sticky top-2 sm:top-3 z-50 w-full px-3 sm:px-6 pointer-events-none transition-all duration-300">
       <header
-        className="max-w-[1140px] mx-auto bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between pointer-events-auto transition-all"
+        className={`max-w-[1140px] mx-auto transition-all duration-300 rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between pointer-events-auto ${
+          isScrolled
+            ? 'bg-white/95 backdrop-blur-2xl border border-[#d6d2c4] shadow-[0_12px_36px_rgba(0,0,0,0.08)] py-1.5 sm:py-2'
+            : 'bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.05)]'
+        }`}
         id="main-glass-navbar"
       >
         {/* Brand */}
         <a
           href="#"
-          className="flex items-center gap-2.5 group pl-1.5"
+          className={`flex items-center gap-2.5 group pl-1.5 transition-all duration-500 ease-out ${
+            isMounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+          }`}
           id="navbar-brand-logo"
         >
           <div className="w-8 h-8 sm:w-9 sm:h-9 bg-[#0d0f12] rounded-full flex items-center justify-center text-[#d9ff3d] shadow-sm transition-transform group-hover:scale-105">
@@ -65,20 +83,29 @@ export function Navbar({ onBookClick }: NavbarProps) {
         </a>
 
         {/* Simplified Center Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold text-[#3b3e45]">
-          {navLinks.map((link) => (
+        <nav
+          className={`hidden lg:flex items-center gap-5 text-xs font-semibold text-[#3b3e45] transition-all duration-600 delay-100 ease-out ${
+            isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+          }`}
+        >
+          {navLinks.map((link, idx) => (
             <button
               key={link.label}
               onClick={() => handleLinkClick(link.href)}
-              className="text-[#4e5159] hover:text-[#0d0f12] transition-colors py-1 cursor-pointer"
+              style={{ transitionDelay: `${idx * 40}ms` }}
+              className="text-[#4e5159] hover:text-[#0d0f12] transition-colors py-1 cursor-pointer hover:-translate-y-0.5"
             >
               {link.label}
             </button>
           ))}
         </nav>
 
-        {/* Right 2 CTAs: 1> Call Us (with WhatsApp / Phone dropdown) 2> Book a Service */}
-        <div className="hidden sm:flex items-center gap-2.5">
+        {/* Right 2 CTAs: 1> Call Us 2> Book a Service */}
+        <div
+          className={`hidden sm:flex items-center gap-2.5 transition-all duration-600 delay-200 ease-out ${
+            isMounted ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+          }`}
+        >
           
           {/* CTA 1: Call Us (Dropdown with 2 options) */}
           <div className="relative" ref={dropdownRef}>

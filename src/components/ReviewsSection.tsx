@@ -24,12 +24,12 @@ export function ReviewsSection() {
             </span>
 
             <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0d0f12] mt-3 leading-tight">
-              We can tell you we're good. <br className="hidden sm:inline" />
-              Our customers can tell you better.
+              Real PCs. Verified fixes. <br className="hidden sm:inline" />
+              Direct customer feedback.
             </h2>
 
             <p className="text-base sm:text-lg text-[#4a4d53] mt-4 leading-relaxed">
-              Real customers. Real PCs. Real problems. And hopefully, fewer <span className="italic font-medium text-[#0d0f12]">"ভাই PC আবার বন্ধ হয়ে গেছে"</span> calls.
+              Real customers, actual desktop hardware, and documented solutions across Dhaka and nationwide courier.
             </p>
           </div>
 
