@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TrustStrip } from './components/TrustStrip';
 import { ProblemIntro } from './components/ProblemIntro';
+import { EducationalStory } from './components/EducationalStory';
 import { ServicesSection } from './components/ServicesSection';
 import { WhyUsSection } from './components/WhyUsSection';
 import { ProcessSection } from './components/ProcessSection';
@@ -62,6 +63,9 @@ export default function App() {
 
         {/* 04. PROBLEM INTRO / SYMPTOMS */}
         <ProblemIntro onBookClick={() => scrollToBooking('Hardware Diagnostics')} />
+
+        {/* 05. EDUCATIONAL STORY */}
+        <EducationalStory />
 
         {/* 05. SERVICES */}
         <ServicesSection

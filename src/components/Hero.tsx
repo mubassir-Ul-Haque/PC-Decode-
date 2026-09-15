@@ -1,122 +1,97 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, ShieldCheck, ChevronsRight, ChevronRight, Check } from 'lucide-react';
+import { ArrowRight, ShieldCheck, CheckCircle2, Star } from 'lucide-react';
 import { AutoBeforeAfter } from './AutoBeforeAfter';
 
 interface HeroProps {
   onBookClick: () => void;
-  onExploreClick: () => void;
+  onExploreClick: () => void; // Kept for interface compatibility with App.tsx
 }
 
-export function Hero({ onBookClick, onExploreClick }: HeroProps) {
-  // Horizontal auto-text rotating symptoms
-  const [headlineIndex, setHeadlineIndex] = useState<number>(0);
-  const [isMounted, setIsMounted] = useState<boolean>(false);
-  const headlineCycle = [
-    { text: 'PC Slow?', suffix: 'Dust & Throttling' },
-    { text: 'Running Hot?', suffix: 'Dried Thermal Compound' },
-    { text: 'Making Weird Sounds?', suffix: 'Fan Bearing Friction' },
-    { text: 'Dropping Frames?', suffix: 'Clock Speed Drop' }
-  ];
+const HERO_CASES = [
+  {
+    problem: 'Dropping Frames?',
+    reviewText: 'Clear diagnosis, proper explanation, and the PC came back working exactly as expected.',
+    reviewAuthor: 'Verified Customer'
+  },
+  {
+    problem: 'Running Hot?',
+    reviewText: 'Temperatures dropped by 20 degrees. It feels like a brand new machine again.',
+    reviewAuthor: 'Verified Customer'
+  },
+  {
+    problem: 'Making Weird Noise?',
+    reviewText: 'They found the faulty fan bearing instantly and replaced it without trying to upsell me.',
+    reviewAuthor: 'Verified Customer'
+  },
+  {
+    problem: 'No Display?',
+    reviewText: 'Thought my GPU was dead. PCDecode cleaned the PCIe slot and saved me thousands.',
+    reviewAuthor: 'Verified Customer'
+  }
+];
+
+export function Hero({ onBookClick }: HeroProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     const timer = setInterval(() => {
-      setHeadlineIndex((prev) => (prev + 1) % headlineCycle.length);
-    }, 2800);
+      setActiveIndex((prev) => (prev + 1) % HERO_CASES.length);
+    }, 4500);
     return () => clearInterval(timer);
-  }, [headlineCycle.length]);
+  }, []);
 
-  const scrollToResults = () => {
-    const el = document.getElementById('results');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-    else onExploreClick();
-  };
+  const currentCase = HERO_CASES[activeIndex];
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#faf9f6] pt-10 pb-16 md:pt-14 md:pb-24 border-b border-[#e8e6e1]">
+    <section className="relative w-full overflow-hidden bg-[#faf9f6] pt-12 pb-0 md:pt-16 md:pb-0 border-b border-[#e8e6e1]">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center pb-12 md:pb-16">
           
-          {/* LEFT 7 COLS: Copy & Value Proposition */}
-          <div className="lg:col-span-7 flex flex-col items-start">
-            
-            {/* Eyebrow */}
+          {/* LEFT SIDE: STORY + CTA */}
+          <div className="lg:col-span-6 flex flex-col items-start z-10">
             <div
-              className={`inline-flex items-center gap-2 border border-[#d8d5cb] bg-[#f0eee6] rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#3b3a36] tracking-wide uppercase transition-all duration-700 ease-out ${
+              className={`transition-all duration-700 ease-out ${
                 isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block animate-pulse"></span>
-              <span>YOUR PC ISN'T "OLD" — MAYBE IT JUST NEEDS THE RIGHT DIAGNOSIS.</span>
-            </div>
-
-            {/* Main Heading with Horizontal Auto-Text Change Effect */}
-            <div
-              className={`mt-5 transition-all duration-700 delay-150 ease-out ${
-                isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
-              <h1 
-                className="font-heading text-4xl sm:text-5xl lg:text-[56px] font-bold tracking-tight text-[#0d0f12] leading-[1.12]"
-                style={{ fontFamily: 'Arial, sans-serif' }}
-              >
-                <div className="h-[52px] sm:h-[62px] lg:h-[70px] overflow-hidden flex items-center">
-                  <span
-                    key={headlineIndex}
-                    className="inline-block text-[#0d0f12] animate-fadeIn transition-all duration-500 will-change-transform"
-                  >
-                    {headlineCycle[headlineIndex].text}
-                  </span>
-                </div>
-                <div className="mt-1">
-                  <span className="inline-block bg-[#0d0f12] text-[#d9ff3d] px-3.5 py-1 rounded-xl shadow-sm hover:scale-[1.02] transition-transform">
-                    We Decode It.
-                  </span>
-                </div>
+              <h1 className="font-heading text-[2.5rem] sm:text-[3.5rem] lg:text-[4rem] font-bold tracking-tight text-[#0d0f12] leading-[1.05] uppercase">
+                PC PROBLEMS?<br />
+                WE FIND THE REAL CAUSE.
               </h1>
             </div>
 
-            {/* Supporting Copy */}
-            <p
-              className={`text-base sm:text-lg text-[#4a4d53] mt-5 leading-relaxed max-w-[580px] transition-all duration-700 delay-300 ease-out ${
-                isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
-              From dusty fans and dried-out thermal paste to GPU and motherboard faults, we find out what's actually wrong with your PC — then fix it properly.
-            </p>
-
-            {/* The Bangladeshi PC Expert Truth Box */}
             <div
-              className={`mt-5 p-4 rounded-2xl bg-[#f2efe6] border border-[#e4e1d7] max-w-[560px] w-full transition-all duration-700 delay-400 ease-out ${
+              className={`mt-4 sm:mt-5 h-[36px] sm:h-[44px] overflow-hidden flex items-center transition-all duration-700 delay-150 ease-out ${
                 isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              <div className="flex flex-col gap-2 font-medium text-sm text-[#27292e]">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-[#0d0f12] text-[#d9ff3d] flex items-center justify-center text-xs font-bold shrink-0">✓</span>
-                  <span>Diagnose first. Replace only when necessary.</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-[#0d0f12] text-[#d9ff3d] flex items-center justify-center text-xs font-bold shrink-0">✓</span>
-                  <span><span className="font-bold text-[#0d0f12]">"ভাই, motherboard শেষ"</span> — diagnosis ছাড়া এই কথা বলা উচিত না.</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-[#0d0f12] text-[#d9ff3d] flex items-center justify-center text-xs font-bold shrink-0">✓</span>
-                  <span>No random part swapping. No surprise charges.</span>
-                </div>
-              </div>
+              <span
+                key={activeIndex}
+                className="inline-block text-[#0d0f12] font-mono text-xl sm:text-2xl font-bold bg-[#d9ff3d] px-3.5 py-1.5 rounded-md animate-fadeIn"
+              >
+                {currentCase.problem}
+              </span>
             </div>
+
+            <p
+              className={`text-base sm:text-lg text-[#4a4d53] mt-6 leading-relaxed max-w-[540px] transition-all duration-700 delay-300 ease-out ${
+                isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}
+            >
+              From cleaning and thermal maintenance to hardware diagnosis and repair — we find the problem first, explain it clearly, then fix it properly.
+            </p>
 
             {/* CTAs */}
             <div
-              className={`mt-8 flex flex-wrap items-center gap-3.5 transition-all duration-700 delay-500 ease-out ${
+              className={`mt-8 flex flex-wrap items-center gap-3.5 transition-all duration-700 delay-400 ease-out ${
                 isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
               <button
                 onClick={onBookClick}
                 className="bg-[#0d0f12] hover:bg-[#202227] text-white font-semibold text-base rounded-full px-8 py-3.5 flex items-center gap-2.5 shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95 group hover:-translate-y-0.5"
-                id="hero-cta-book-service"
               >
                 <span>Book a Service</span>
                 <ArrowRight className="w-4 h-4 text-[#d9ff3d] transition-transform duration-300 group-hover:translate-x-1.5" />
@@ -127,43 +102,87 @@ export function Hero({ onBookClick, onExploreClick }: HeroProps) {
                 target="_blank"
                 rel="noreferrer"
                 className="border border-[#cfccc3] hover:border-[#0d0f12] bg-white hover:bg-[#faf9f6] text-[#0d0f12] font-semibold text-base rounded-full px-7 py-3.5 flex items-center gap-2 transition-all cursor-pointer shadow-xs hover:-translate-y-0.5 active:scale-95"
-                id="hero-cta-whatsapp-us"
               >
                 <span>WhatsApp Us</span>
               </a>
             </div>
 
-            {/* Small Trust Text */}
+            {/* Compact Trust Statement */}
             <div
-              className={`mt-6 flex items-center gap-2 text-xs font-medium text-[#64676d] transition-all duration-700 delay-600 ease-out ${
+              className={`mt-6 flex items-center gap-2 text-[13px] font-medium text-[#64676d] transition-all duration-700 delay-500 ease-out ${
                 isMounted ? 'opacity-100' : 'opacity-0'
               }`}
             >
-              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Doorstep diagnostics in Dhaka • Nationwide courier intake • 30-Day service warranty</span>
+              <CheckCircle2 className="w-4 h-4 text-[#0d0f12] opacity-80 shrink-0" />
+              <span>Diagnose first • Customer approval • Test before return</span>
             </div>
           </div>
 
-          {/* RIGHT 5 COLS: CLEAN AUTO BEFORE/AFTER */}
+          {/* RIGHT SIDE: PROOF & REVIEW */}
           <div
-            className={`lg:col-span-5 flex flex-col items-center justify-center transition-all duration-1000 delay-300 ease-out ${
+            className={`lg:col-span-6 flex flex-col gap-5 lg:pl-6 transition-all duration-1000 delay-300 ease-out ${
               isMounted ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-6'
             }`}
           >
-            <div className="w-full max-w-[480px] h-[340px] sm:h-[400px] lg:h-[440px] rounded-2xl bg-white shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-[#e8e6e1] relative overflow-hidden">
+            {/* Visual Work Proof */}
+            <div className="w-full h-[280px] sm:h-[340px] lg:h-[360px] rounded-2xl bg-white shadow-[0_15px_40px_rgba(0,0,0,0.06)] border border-[#e8e6e1] relative overflow-hidden">
               <AutoBeforeAfter 
                 beforeImg="https://storage.googleapis.com/banani-generated-images/generated-images/fb644b81-c286-4178-9da3-609d86aae549.jpg"
                 afterImg="https://storage.googleapis.com/banani-generated-images/generated-images/b6b9b53a-5fff-49d0-a30a-12e1da5683d3.jpg"
               />
+              {/* Subtle Floating Label */}
+              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur border border-[#e8e6e1] px-3 py-1.5 rounded-full shadow-sm flex items-center gap-2 z-30">
+                <span className="w-2 h-2 rounded-full bg-[#d9ff3d] inline-block animate-pulse"></span>
+                <span className="font-mono text-[10px] font-bold text-[#0d0f12] tracking-wider uppercase">Real Service Work</span>
+              </div>
             </div>
-            
-            {/* Sub-badge below the card */}
-            <div className="mt-5 inline-flex items-center gap-2 bg-white border border-[#dedad0] rounded-full px-3.5 py-1.5 shadow-xs text-xs font-semibold text-[#0d0f12]">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
-              <span>Home Service in Dhaka • Nationwide Courier Support</span>
+
+            {/* Editorial Review Block */}
+            <div className="bg-white border border-[#e8e6e1] rounded-2xl p-5 sm:p-6 shadow-sm relative overflow-hidden">
+               <div className="flex text-[#0d0f12] mb-3 gap-0.5">
+                 {[...Array(5)].map((_, i) => (
+                   <Star key={i} className="w-4 h-4 fill-[#0d0f12]" />
+                 ))}
+               </div>
+               <p
+                 key={`review-${activeIndex}`}
+                 className="text-sm sm:text-base font-medium text-[#0d0f12] italic leading-relaxed animate-fadeIn"
+               >
+                 "{currentCase.reviewText}"
+               </p>
+               <div className="mt-3 font-mono text-[11px] text-[#64676d] uppercase tracking-wide font-semibold">
+                 — {currentCase.reviewAuthor}
+               </div>
             </div>
           </div>
 
+        </div>
+      </div>
+      
+      {/* HORIZONTAL TRUST STRIP */}
+      <div className={`border-t border-[#e8e6e1] bg-white py-4 sm:py-5 transition-all duration-1000 delay-500 ease-out ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
+           <div className="flex flex-wrap items-center justify-between gap-4 text-xs sm:text-sm font-semibold text-[#0d0f12]">
+             <div className="flex items-center gap-2">
+               <Star className="w-4 h-4 text-[#d9ff3d] fill-[#0d0f12] stroke-[#0d0f12]" />
+               <span>4.9/5 Customer Rating</span>
+             </div>
+             <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#e8e6e1]"></div>
+             <div className="flex items-center gap-2">
+               <ShieldCheck className="w-4 h-4 text-[#0d0f12]" />
+               <span>30-Day Service Warranty</span>
+             </div>
+             <div className="hidden md:block w-1.5 h-1.5 rounded-full bg-[#e8e6e1]"></div>
+             <div className="flex items-center gap-2">
+               <CheckCircle2 className="w-4 h-4 text-[#0d0f12]" />
+               <span>Dhaka Home Service</span>
+             </div>
+             <div className="hidden lg:block w-1.5 h-1.5 rounded-full bg-[#e8e6e1]"></div>
+             <div className="flex items-center gap-2">
+               <CheckCircle2 className="w-4 h-4 text-[#0d0f12]" />
+               <span>Nationwide Courier</span>
+             </div>
+           </div>
         </div>
       </div>
     </section>

@@ -1,281 +1,253 @@
 import { useState, useEffect, useRef } from 'react';
-import { AlertCircle, Flame, Gamepad2, Volume2, ArrowRight, Wrench, PowerOff, Gauge, RefreshCcw, ChevronLeft, ChevronRight, ChevronsRight } from 'lucide-react';
+import { ThermometerSun, Volume2, Gamepad2, AlertCircle, PowerOff, Gauge, RefreshCcw, VolumeX, ArrowRight } from 'lucide-react';
+import diagnosticImg1 from '../assets/images/pc_diagnostic_bench_1789496807097.jpg';
+import diagnosticImg2 from '../assets/images/pc_thermal_repair_1789496825583.jpg';
 
 interface ProblemIntroProps {
   onBookClick: () => void;
 }
 
-export function ProblemIntro({ onBookClick }: ProblemIntroProps) {
-  const [activeSymptom, setActiveSymptom] = useState<number>(0);
-  const [autoTextIndex, setAutoTextIndex] = useState<number>(0);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+const HEADLINES = [
+  'Making Weird Sounds?',
+  'Running Unusually Hot?',
+  'Dropping FPS in Games?',
+  'Showing No Display?',
+  'Shutting Down Randomly?',
+  'Feeling Extremely Slow?',
+];
 
-  // Horizontal auto-text change sequence: "pc slow >>> hot >>> making weird sounds >>> ..."
-  const headerTicker = [
-    { text: 'PC Running Slow', icon: '🐢' },
-    { text: 'Getting Too Hot', icon: '🔥' },
-    { text: 'Making Weird Sounds', icon: '🔊' },
-    { text: 'Dropping Frames in Games', icon: '🎮' },
-    { text: 'Randomly Crashing', icon: '⚠️' },
-    { text: 'No Display on Monitor', icon: '🖥️' }
-  ];
+const SYMPTOMS = [
+  {
+    icon: ThermometerSun,
+    label: 'Overheating',
+    tag: 'Thermal',
+    shortDesc: 'System runs hot, fans spin loud',
+    causes: 'Possible causes include dried thermal paste, dust-clogged heatsinks, failing AIO pump, or poor chassis airflow.',
+    diagnosisText: 'We use thermal imaging and software logging to check core temperatures under synthetic loads.',
+    banglaNote: 'পিসি গরম হয়ে রিস্টার্ট নিচ্ছে? থার্মাল পেস্ট আর কুলিং সিস্টেম চেক করা জরুরি।',
+    image: diagnosticImg2,
+  },
+  {
+    icon: Volume2,
+    label: 'Loud Fans',
+    tag: 'Acoustic',
+    shortDesc: 'Fans sounding like a jet engine',
+    causes: 'Possible causes include dry fan bearings, aggressive default fan curves, or fans compensating for overheating components.',
+    diagnosisText: 'We isolate the exact fan causing the noise and check acoustic profiles.',
+    banglaNote: 'ফ্যানের আওয়াজে টেকা দায়? বিয়ারিং বা ডাস্ট ইস্যু হতে পারে।',
+    image: diagnosticImg1,
+  },
+  {
+    icon: Gamepad2,
+    label: 'FPS Drops',
+    tag: 'Gaming',
+    shortDesc: 'Games stuttering or losing frames',
+    causes: 'Possible causes include CPU/GPU thermal throttling, VRM overheating causing clock throttling, or RAM channel bottlenecks.',
+    diagnosisText: 'We log 1% low frametimes and hardware clock frequencies under real load.',
+    banglaNote: 'গেম খেলতে গিয়ে ল্যাগ করছে? পিসি স্লো হলে আগে থার্মাল আর ক্লক স্পিড দেখা উচিত।',
+    image: diagnosticImg2,
+  },
+  {
+    icon: AlertCircle,
+    label: 'No Display',
+    tag: 'Hardware',
+    shortDesc: 'PC powers on, but screen stays black',
+    causes: 'Possible causes include RAM slot oxidation, monitor cable fault, GPU PCIe power rail interruption, or corrupted BIOS.',
+    diagnosisText: 'We inspect debug POST codes, RAM channel voltages, and display outputs instead of immediately assuming component failure.',
+    banglaNote: '"ভাই motherboard শেষ" শোনার আগে প্রোপার ডায়াগনসিস করান। বেশিরভাগ সময় ছোট কোনো সংযোগের ত্রুটি থাকে।',
+    image: diagnosticImg1,
+  },
+  {
+    icon: PowerOff,
+    label: 'Shutdowns',
+    tag: 'Power/Load',
+    shortDesc: 'System suddenly turns off or restarts',
+    causes: 'Possible causes include PSU 12V voltage rail drops under load, CPU thermal safety trip threshold, or failing capacitors.',
+    diagnosisText: 'We load-test the power supply with digital multimeters and monitor motherboard VRM temperatures.',
+    banglaNote: 'হুট করে পিসি বন্ধ হয়ে যায়? পাওয়ার সাপ্লাই আর থার্মাল সেফটি চেক না করে নতুন পার্টস কেনা বোকামি।',
+    image: diagnosticImg2,
+  },
+  {
+    icon: Gauge,
+    label: 'Slow PC',
+    tag: 'Performance',
+    shortDesc: 'Windows taking forever to load or respond',
+    causes: 'Possible causes include storage drive degradation (bad sectors / worn NVMe NAND), thermal clock throttling, or system file corruption.',
+    diagnosisText: 'We analyze drive SMART health status, read/write IOPS performance, and operating temperatures.',
+    banglaNote: 'ফোল্ডার খুলতেও সময় নিচ্ছে? সমস্যা হার্ডডিস্ক বা থার্মাল থ্রোটলিংয়ে হতে পারে।',
+    image: diagnosticImg1,
+  },
+  {
+    icon: RefreshCcw,
+    label: 'BSOD / Freeze',
+    tag: 'Stability',
+    shortDesc: 'Blue screen of death or total freeze',
+    causes: 'Possible causes include faulty memory sectors, driver conflicts, memory timing instability, or unstable CPU Vcore voltage.',
+    diagnosisText: 'We execute bootable MemTest86 passes and read minidump crash logs to pinpoint the exact offending driver or module.',
+    banglaNote: 'ক্র্যাশ লগ অ্যানালাইসিস করলেই স্পষ্ট সমাধান মেলে।',
+    image: diagnosticImg2,
+  },
+];
+
+export function ProblemIntro({ onBookClick }: ProblemIntroProps) {
+  const [headlineIndex, setHeadlineIndex] = useState(0);
+  const [activeSymptom, setActiveSymptom] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setAutoTextIndex((prev) => (prev + 1) % headerTicker.length);
-    }, 2400);
+      setHeadlineIndex((prev) => (prev + 1) % HEADLINES.length);
+    }, 3500);
     return () => clearInterval(timer);
-  }, [headerTicker.length]);
+  }, []);
 
-  const symptoms = [
-    {
-      icon: Flame,
-      label: 'Overheating',
-      tag: 'Thermal',
-      shortDesc: 'PC getting excessively hot',
-      causes: 'Possible causes include dust buildup in heatsink fins, dried or cracked thermal paste, cooler mounting pressure loss, AIO pump failure, or restricted chassis intake airflow.',
-      diagnosisText: 'A proper diagnosis tells us which one is actually responsible so you only address what is needed.',
-      banglaNote: 'গরম হাওয়া বের হচ্ছে আর কেসিং গরম? ভেতরে তাপ আটকে আছে—ডায়াগনসিস ছাড়া পার্টস বদলানোর দরকার নেই।',
-    },
-    {
-      icon: Volume2,
-      label: 'Loud Fans',
-      tag: 'Acoustic',
-      shortDesc: 'Fans spinning at 100% like jet takeoff',
-      causes: 'Possible causes include dust accumulation, fan bearing wear, restricted exhaust airflow, high background processor load, or an aggressive/uncalibrated fan curve.',
-      diagnosisText: 'We inspect bearing friction, fan RPM telemetry, and thermal triggers before deciding if a fan needs cleaning or replacement.',
-      banglaNote: 'ফ্যানের আওয়াজে রুমে থাকা দায়? ফ্যান নষ্ট না-ও হতে পারে—হয়তো শুধু বাতাস চলাচলের পথ বন্ধ।',
-    },
-    {
-      icon: Gamepad2,
-      label: 'FPS Drops',
-      tag: 'Gaming',
-      shortDesc: 'Games stuttering or losing frames',
-      causes: 'Possible causes include CPU/GPU thermal throttling, VRM overheating causing clock throttling, RAM channel bandwidth bottlenecks, or outdated chipset drivers.',
-      diagnosisText: 'We log 1% low frametimes and hardware clock frequencies under real load to isolate the exact bottleneck.',
-      banglaNote: 'গেম খেলতে গিয়ে PowerPoint presentation মনে হচ্ছে? পিসি স্লো হলে আগে থার্মাল আর ক্লক স্পিড দেখা উচিত।',
-    },
-    {
-      icon: AlertCircle,
-      label: 'No Display',
-      tag: 'Hardware',
-      shortDesc: 'PC powers on, but screen stays black',
-      causes: 'Possible causes include RAM slot oxidation, monitor cable fault, GPU PCIe power rail interruption, corrupted BIOS state, or motherboard POST failure.',
-      diagnosisText: 'We inspect debug POST codes, RAM channel voltages, and display outputs instead of immediately assuming component failure.',
-      banglaNote: '"ভাই motherboard শেষ" শোনার আগে প্রোপার ডায়াগনসিস করান। বেশিরভাগ সময় ছোট কোনো সংযোগের ত্রুটি থাকে।',
-    },
-    {
-      icon: PowerOff,
-      label: 'Shutdowns',
-      tag: 'Power/Load',
-      shortDesc: 'System suddenly turns off or restarts',
-      causes: 'Possible causes include PSU 12V voltage rail drops under load, CPU thermal safety trip threshold, failing capacitors, or domestic power surges.',
-      diagnosisText: 'We load-test the power supply with digital multimeters and monitor motherboard VRM temperatures under full stress.',
-      banglaNote: 'হুট করে পিসি বন্ধ হয়ে যায়? পাওয়ার সাপ্লাই আর থার্মাল সেফটি চেক না করে নতুন পার্টস কেনা বোকামি।',
-    },
-    {
-      icon: Gauge,
-      label: 'Slow PC',
-      tag: 'Performance',
-      shortDesc: 'Windows taking forever to load or respond',
-      causes: 'Possible causes include storage drive degradation (bad sectors / worn NVMe NAND), thermal clock throttling, severe software background bloat, or corrupted system files.',
-      diagnosisText: 'We analyze drive SMART health status, read/write IOPS performance, and operating temperatures to find what is lagging.',
-      banglaNote: 'ফোল্ডার খুলতেও সময় নিচ্ছে? সমস্যা হার্ডডিস্ক বা থার্মাল থ্রোটলিংয়ে হতে পারে, পিসি ফেলে দেওয়ার মতো পুরোনো না।',
-    },
-    {
-      icon: RefreshCcw,
-      label: 'BSOD / Freeze',
-      tag: 'Stability',
-      shortDesc: 'Blue screen of death or total freeze',
-      causes: 'Possible causes include faulty memory sectors, driver conflicts, memory timing instability, failing storage controller, or unstable CPU Vcore voltage.',
-      diagnosisText: 'We execute bootable MemTest86 passes and read minidump crash logs to pinpoint the exact offending driver or module.',
-      banglaNote: 'PC অন হচ্ছে আর properly working — দুইটা আলাদা জিনিস। ক্র্যাশ লগ অ্যানালাইসিস করলেই স্পষ্ট সমাধান মেলে।',
-    },
-  ];
-
-  // Mobile scroll helper
-  const scrollSymptom = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = direction === 'left' ? -200 : 200;
-      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
+  const symptom = SYMPTOMS[activeSymptom];
 
   return (
-    <section id="problems" className="w-full bg-[#f6f5f0] py-16 md:py-24 border-b border-[#e8e6e1]">
+    <section className="bg-[#faf9f6] py-16 md:py-24 border-b border-[#e8e6e1]">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
-        
-        {/* Header Block with Horizontal Auto-Text Change Effect */}
-        <div className="max-w-[840px]">
-          <span className="inline-block text-xs font-mono font-bold tracking-wider text-[#6f6e6a] uppercase">
-            COMMON PC PROBLEMS
-          </span>
-
-          {/* DYNAMIC HORIZONTAL AUTO-TEXT HEADER */}
-          <div className="mt-3 flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-3 flex-wrap">
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0d0f12] leading-tight">
+        {/* Top Header Area */}
+        <div className="mb-12">
+          <h3 className="font-mono text-xs font-bold uppercase tracking-widest text-[#64676d] mb-4">
+            Common PC Problems
+          </h3>
+          
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6">
+            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#0d0f12]">
               Is your PC
             </h2>
-            
-            {/* Auto-cycling horizontal symptom text */}
-            <div className="inline-flex items-center gap-2 bg-[#0d0f12] text-[#d9ff3d] px-3.5 py-1.5 rounded-xl font-heading text-2xl sm:text-3xl lg:text-4xl font-bold shadow-sm transition-all duration-300">
-              <span>{headerTicker[autoTextIndex].icon}</span>
-              <span className="animate-fade-in whitespace-nowrap">{headerTicker[autoTextIndex].text}?</span>
+            <div className="relative h-[48px] sm:h-[60px] lg:h-[72px] overflow-hidden bg-[#0d0f12] text-[#d9ff3d] rounded-xl px-4 sm:px-6 flex items-center min-w-[280px] sm:min-w-[400px]">
+              <div className="flex items-center gap-3 w-full animate-fadeIn" key={headlineIndex}>
+                <VolumeX className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 text-[#64676d]" />
+                <span className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold truncate">
+                  {HEADLINES[headlineIndex]}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Horizontal progression chain: pc slow >>> hot >>> making weird sounds */}
-          <div className="mt-3.5 flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs sm:text-sm font-mono text-[#62656d]">
-            <span className={autoTextIndex === 0 ? 'text-[#0d0f12] font-bold underline decoration-[#d9ff3d] decoration-2' : ''}>
-              PC Slow
-            </span>
-            <ChevronsRight className="w-3.5 h-3.5 text-[#a8a59b]" />
-            <span className={autoTextIndex === 1 ? 'text-[#0d0f12] font-bold underline decoration-[#d9ff3d] decoration-2' : ''}>
-              Hot
-            </span>
-            <ChevronsRight className="w-3.5 h-3.5 text-[#a8a59b]" />
-            <span className={autoTextIndex === 2 ? 'text-[#0d0f12] font-bold underline decoration-[#d9ff3d] decoration-2' : ''}>
-              Making Weird Sounds
-            </span>
-            <ChevronsRight className="w-3.5 h-3.5 text-[#a8a59b]" />
-            <span className="text-[#0d0f12] font-bold bg-[#eae7dc] px-2 py-0.5 rounded">
-              We Decode It
-            </span>
+          <div className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs font-mono font-bold uppercase text-[#8b91a0] mb-8">
+            <span className="text-[#0d0f12]">PC Slow</span>
+            <span>»</span>
+            <span>Hot</span>
+            <span>»</span>
+            <span className="text-[#0d0f12] underline decoration-[#d9ff3d] decoration-2 underline-offset-4">Making Weird Sounds</span>
+            <span>»</span>
+            <span className="bg-[#f0eee6] px-2 py-1 rounded text-[#0d0f12]">We Decode It</span>
           </div>
 
-          <p className="mt-4 text-base sm:text-lg text-[#3f4147] leading-relaxed">
-            Many PC problems look terminal when they happen, but the underlying root cause is often manageable: dust accumulation, dried thermal compound, contact oxidation, or loose cables.
-          </p>
-
-          <div className="mt-4 inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-bold text-[#0d0f12] bg-[#d9ff3d] px-3.5 py-1.5 rounded-lg border border-[#c4eb28]">
-            <span>Diagnose first. Replace only when necessary.</span>
+          <div className="max-w-3xl">
+            <p className="text-base sm:text-lg text-[#4a4d53] leading-relaxed mb-6 font-medium">
+              Many PC problems look terminal when they happen, but the underlying root cause is often manageable: dust accumulation, dried thermal compound, contact oxidation, or loose cables.
+            </p>
+            <div className="inline-block bg-[#d9ff3d] text-[#0d0f12] px-4 py-2 rounded-lg font-mono text-sm font-bold shadow-sm border border-[#c4e636]">
+              Diagnose first. Replace only when necessary.
+            </div>
           </div>
         </div>
 
-        {/* Interactive Symptom Checker - OPTIMIZED FOR MOBILE */}
-        <div className="mt-10 sm:mt-12 bg-white rounded-2xl border border-[#e8e6e1] shadow-sm p-4 sm:p-7">
-          
-          {/* Header Row & Mobile Scroll Controls */}
-          <div className="flex items-center justify-between border-b border-[#e8e6e1] pb-3 mb-4 sm:mb-6">
+        {/* Symptom Explorer */}
+        <div className="bg-white rounded-2xl border border-[#e8e6e1] shadow-sm p-4 sm:p-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
             <div>
-              <span className="text-[11px] font-mono font-bold text-[#6f6e6a] uppercase">
+              <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-[#64676d] mb-1">
                 Symptom Explorer
-              </span>
-              <h3 className="font-heading text-base sm:text-xl font-bold text-[#0d0f12]">
+              </h4>
+              <h3 className="font-heading text-2xl sm:text-3xl font-bold text-[#0d0f12]">
                 What is your PC currently doing?
               </h3>
             </div>
-            
-            {/* Mobile Scroll Indicators & Arrows */}
-            <div className="flex sm:hidden items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => scrollSymptom('left')}
-                className="w-7 h-7 rounded-full bg-[#f4f2eb] flex items-center justify-center text-[#0d0f12] active:bg-[#e4e1d7]"
-                aria-label="Scroll left"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <span className="text-[11px] font-mono text-[#6f6e6a]">
-                {activeSymptom + 1}/7
-              </span>
-              <button
-                type="button"
-                onClick={() => scrollSymptom('right')}
-                className="w-7 h-7 rounded-full bg-[#f4f2eb] flex items-center justify-center text-[#0d0f12] active:bg-[#e4e1d7]"
-                aria-label="Scroll right"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            <span className="hidden sm:inline-block text-xs text-[#6f6e6a]">
+            <div className="text-xs font-mono text-[#8b91a0]">
               Select a symptom to see how we diagnose it
-            </span>
+            </div>
           </div>
 
-          {/* Symptom Selection Pills - MOBILE OPTIMIZED (HORIZONTAL SCROLL ON MOBILE, GRID ON DESKTOP) */}
-          <div
+          {/* Horizontal Scroller for Symptoms */}
+          <div 
             ref={scrollContainerRef}
-            className="flex sm:grid sm:grid-cols-3 lg:grid-cols-7 overflow-x-auto sm:overflow-x-visible no-scrollbar gap-2.5 pb-2 sm:pb-0 scroll-smooth snap-x snap-mandatory"
+            className="flex overflow-x-auto gap-3 pb-6 no-scrollbar snap-x"
           >
-            {symptoms.map((symptom, idx) => {
-              const IconComp = symptom.icon;
+            {SYMPTOMS.map((s, idx) => {
               const isActive = activeSymptom === idx;
               return (
                 <button
-                  key={symptom.label}
-                  type="button"
+                  key={idx}
                   onClick={() => setActiveSymptom(idx)}
-                  className={`shrink-0 w-[145px] sm:w-auto p-3 sm:p-3.5 rounded-xl text-left border transition-all cursor-pointer flex flex-col justify-between gap-2.5 snap-start ${
-                    isActive
-                      ? 'bg-[#0d0f12] text-white border-[#0d0f12] shadow-sm ring-2 ring-[#d9ff3d]/60 sm:scale-[1.02]'
-                      : 'bg-[#faf9f6] text-[#2d3036] border-[#e8e6e1] hover:border-[#cfccc3]'
+                  className={`shrink-0 snap-start w-[160px] h-[120px] rounded-xl p-4 flex flex-col justify-between transition-all border text-left group ${
+                    isActive 
+                      ? 'bg-[#0d0f12] border-[#0d0f12] shadow-md -translate-y-1' 
+                      : 'bg-white border-[#e8e6e1] hover:border-[#d8d5cb] hover:bg-[#faf9f6]'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${
-                      isActive ? 'bg-[#d9ff3d] text-black' : 'bg-white border border-[#e8e6e1] text-[#0d0f12]'
-                    }`}>
-                      <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    </div>
-                    <span className={`font-mono text-[10px] ${isActive ? 'text-[#d9ff3d]' : 'opacity-60'}`}>
+                  <div className="flex justify-between items-start w-full">
+                    <s.icon className={`w-6 h-6 ${isActive ? 'text-[#d9ff3d]' : 'text-[#64676d]'}`} />
+                    <span className={`font-mono text-[10px] font-bold ${isActive ? 'text-[#d9ff3d]' : 'text-[#a0a5b4]'}`}>
                       0{idx + 1}
                     </span>
                   </div>
                   <div>
-                    <span className="block font-heading font-bold text-xs sm:text-sm leading-snug">
-                      {symptom.label}
-                    </span>
-                    <span className={`block text-[10px] truncate mt-0.5 ${isActive ? 'text-[#a0a5b4]' : 'text-[#7e828d]'}`}>
-                      {symptom.tag}
-                    </span>
+                    <div className={`font-bold text-sm mb-0.5 ${isActive ? 'text-white' : 'text-[#0d0f12]'}`}>
+                      {s.label}
+                    </div>
+                    <div className={`text-[10px] font-mono ${isActive ? 'text-[#a0a5b4]' : 'text-[#64676d]'}`}>
+                      {s.tag}
+                    </div>
                   </div>
                 </button>
               );
             })}
           </div>
 
-          {/* Subtle mobile hint */}
-          <div className="flex sm:hidden items-center justify-between text-[10px] text-[#83868f] font-mono mt-1.5 px-0.5">
-            <span>← Swipe horizontally to explore all 7 symptoms →</span>
-          </div>
+          {/* Details Box */}
+          <div className="bg-[#faf9f6] border border-[#e8e6e1] rounded-xl p-5 sm:p-8 flex flex-col lg:flex-row gap-8 lg:items-center">
+            
+            {/* Left Content */}
+            <div className="flex-1 space-y-6">
+              <div>
+                <h5 className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#64676d] mb-3 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  Multiple Potential Causes ({symptom.label}):
+                </h5>
+                <p className="text-base sm:text-lg text-[#0d0f12] font-medium leading-relaxed">
+                  {symptom.causes}
+                </p>
+              </div>
 
-          {/* Active Symptom Diagnosis Box */}
-          <div className="mt-4 sm:mt-6 p-4 sm:p-6 rounded-xl bg-[#faf9f6] border border-[#e8e6e1] grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
-            <div className="lg:col-span-8 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-bold font-mono text-[#6f6e6a] uppercase">
-                <Wrench className="w-3.5 h-3.5 text-[#0d0f12]" />
-                <span>Multiple Potential Causes ({symptoms[activeSymptom].label}):</span>
+              <div className="bg-white border border-[#e8e6e1] rounded-lg p-4">
+                <span className="font-bold text-[#0d0f12]">Proper Diagnosis: </span>
+                <span className="text-[#4a4d53]">{symptom.diagnosisText}</span>
               </div>
-              <p className="text-sm sm:text-base text-[#1b1c20] font-medium leading-relaxed">
-                {symptoms[activeSymptom].causes}
-              </p>
-              <div className="text-xs sm:text-sm text-[#46484e] bg-white p-3 rounded-lg border border-[#e8e6e1]">
-                <strong className="text-[#0d0f12]">Proper Diagnosis:</strong> {symptoms[activeSymptom].diagnosisText}
-              </div>
-              <div className="pt-1 text-xs font-medium text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg inline-block">
-                💬 {symptoms[activeSymptom].banglaNote}
+
+              <div className="inline-flex items-start gap-2 border border-[#b2e59e] bg-[#eefae8] text-[#246b15] px-3 py-2 rounded-lg text-sm font-medium">
+                <span className="mt-0.5">💬</span>
+                <span>{symptom.banglaNote}</span>
               </div>
             </div>
 
-            <div className="lg:col-span-4 flex flex-col items-start lg:items-end justify-center pt-2 lg:pt-0 border-t lg:border-t-0 border-[#e8e6e1]">
-              <button
+            {/* Right Side - Image and CTA */}
+            <div className="w-full lg:w-[320px] shrink-0 flex flex-col gap-4">
+              <div className="w-full h-[200px] rounded-xl overflow-hidden border border-[#e8e6e1] bg-white">
+                <img 
+                  src={symptom.image} 
+                  alt="PC Diagnostic Work" 
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  key={symptom.image}
+                />
+              </div>
+              <button 
                 onClick={onBookClick}
-                className="w-full sm:w-auto bg-[#0d0f12] hover:bg-[#202227] text-white text-sm font-semibold rounded-full px-7 py-3 flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-all active:scale-95"
-                id="symptom-book-service-btn"
+                className="w-full bg-[#0d0f12] hover:bg-[#202227] text-white font-bold rounded-xl px-5 py-3.5 flex items-center justify-between transition-all group"
               >
                 <span>Book a Service</span>
-                <ArrowRight className="w-4 h-4 text-[#d9ff3d]" />
+                <ArrowRight className="w-4 h-4 text-[#d9ff3d] transition-transform group-hover:translate-x-1" />
               </button>
-              <span className="text-[11px] text-[#6f6e6a] mt-2 text-center lg:text-right w-full sm:w-auto">
+              <div className="text-center font-mono text-[10px] text-[#64676d]">
                 In-home Dhaka visit • Courier intake nationwide
-              </span>
+              </div>
             </div>
+
           </div>
-
         </div>
-
       </div>
     </section>
   );
