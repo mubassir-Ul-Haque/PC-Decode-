@@ -6,7 +6,6 @@ import { TrustStrip } from './components/TrustStrip';
 import { ProblemIntro } from './components/ProblemIntro';
 import { ServicesSection } from './components/ServicesSection';
 import { WhyUsSection } from './components/WhyUsSection';
-import { ResultsSection } from './components/ResultsSection';
 import { ProcessSection } from './components/ProcessSection';
 import { CourierSection } from './components/CourierSection';
 import { ReviewsSection } from './components/ReviewsSection';
@@ -71,9 +70,6 @@ export default function App() {
 
         {/* 06. WHY PCDECODE */}
         <WhyUsSection />
-
-        {/* 07. RESULTS / BEFORE & AFTER */}
-        <ResultsSection onBookClick={() => scrollToBooking()} />
 
         {/* 08. PROCESS */}
         <ProcessSection />

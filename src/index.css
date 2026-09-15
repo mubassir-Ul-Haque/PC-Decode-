@@ -46,6 +46,26 @@
   animation: fadeIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+@keyframes clipSweep {
+  0% { clip-path: polygon(0 0, 0% 0, 0% 100%, 0 100%); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+@keyframes lineSweep {
+  0% { left: 0%; }
+  100% { left: 100%; }
+}
+
+.animate-clip-sweep {
+  animation: clipSweep 4s ease-in-out infinite alternate;
+  will-change: clip-path;
+}
+
+.animate-line-sweep {
+  animation: lineSweep 4s ease-in-out infinite alternate;
+  will-change: left;
+}
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   html {
