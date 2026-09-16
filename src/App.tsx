@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BookingFormData } from './types';
+import { SmoothScroll } from './components/SmoothScroll';
 import { CustomCursor } from './components/CustomCursor';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -47,9 +48,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-[#0d0f12] flex flex-col font-sans selection:bg-[#d9ff3d] selection:text-black">
-      
-      <CustomCursor />
+    <SmoothScroll>
+      <div className="min-h-screen bg-[#faf9f6] text-[#0d0f12] flex flex-col font-sans selection:bg-[#d9ff3d] selection:text-black">
+        
+        <CustomCursor />
 
       {/* 01. NAVBAR (Rounded Glassmorphic with 2 CTAs) */}
       <Navbar onBookClick={() => scrollToBooking()} />
@@ -137,6 +139,7 @@ export default function App() {
         }}
       />
 
-    </div>
+      </div>
+    </SmoothScroll>
   );
 }

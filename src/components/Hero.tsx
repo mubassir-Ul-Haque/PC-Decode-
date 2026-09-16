@@ -172,6 +172,7 @@ export function Hero({ onBookClick }: HeroProps) {
             {/* Visual Work Proof */}
             <div className="w-full h-[280px] sm:h-[340px] lg:h-[360px] rounded-2xl bg-white shadow-[0_15px_40px_rgba(0,0,0,0.06)] border border-[#e8e6e1] relative overflow-hidden">
               <AutoBeforeAfter 
+                disableDrag={true}
                 beforeImg="https://storage.googleapis.com/banani-generated-images/generated-images/fb644b81-c286-4178-9da3-609d86aae549.jpg"
                 afterImg="https://storage.googleapis.com/banani-generated-images/generated-images/b6b9b53a-5fff-49d0-a30a-12e1da5683d3.jpg"
               />

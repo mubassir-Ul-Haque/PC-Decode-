@@ -2,7 +2,7 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    /* Lenis handles smooth scrolling */
   }
 
   body {
