@@ -11,7 +11,8 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       duration: 1.5, // Smooth, deliberate scroll duration
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Default lenis easing
       wheelMultiplier: 0.6, // Dampen the wheel to prevent scrolling too much at once
-      touchMultiplier: 1.5,
+      touchMultiplier: 2, // Adjusted for better mobile feel
+      syncTouch: true, // Enables smooth scrolling for touch devices
     });
 
     // Synchronize Lenis scrolling with GSAP's ScrollTrigger
