@@ -8,12 +8,11 @@ gsap.registerPlugin(ScrollTrigger);
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.8, // Increased slightly for even more smoothness
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
-      wheelMultiplier: 0.6, 
-      touchMultiplier: 0.7, // Drastically reduced to prevent scrolling half the page in one push
-      syncTouch: true, // Enables smooth scrolling for touch devices
-      syncTouchLerp: 0.05, // Adds a smoother, heavier feel to touch momentum
+      lerp: 0.04, // This creates an extremely smooth, heavy, "buttery" friction
+      wheelMultiplier: 0.5, // Slows down desktop mouse wheel
+      touchMultiplier: 0.25, // Extremely reduced so one swipe barely moves the page down
+      syncTouch: true, // Forces touch to use Lenis smoothing
+      syncTouchLerp: 0.04, // Matches the heavy friction for touch
     });
 
     // Synchronize Lenis scrolling with GSAP's ScrollTrigger
