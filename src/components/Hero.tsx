@@ -120,11 +120,11 @@ export function Hero({ onBookClick }: HeroProps) {
               </svg>
             </div>
 
-            <div className="relative pb-2">
-              <h1 className="font-heading text-[36px] sm:text-[48px] lg:text-[64px] font-semibold tracking-tighter text-[#0d0f12] leading-[1.05] uppercase">
-                <div className="overflow-hidden"><span className="hero-headline-line block">PC PROBLEMS?</span></div>
-                <div className="overflow-hidden"><span className="hero-headline-line block text-[#0d0f12]/70">WE FIND THE</span></div>
-                <div className="overflow-hidden"><span className="hero-headline-line block">REAL CAUSE.</span></div>
+            <div className="relative pb-2 w-full">
+              <h1 className="font-heading text-[12.5vw] sm:text-[9vw] md:text-[8vw] lg:text-[4.5vw] xl:text-[76px] 2xl:text-[84px] font-semibold tracking-tighter text-[#0d0f12] leading-[1.05] uppercase whitespace-nowrap">
+                <div className="overflow-hidden"><span className="hero-headline-line block pr-2">PC PROBLEMS?</span></div>
+                <div className="overflow-hidden"><span className="hero-headline-line block text-[#0d0f12]/70 pr-2">WE FIND THE</span></div>
+                <div className="overflow-hidden"><span className="hero-headline-line block pr-2">REAL CAUSE.</span></div>
               </h1>
             </div>
 
