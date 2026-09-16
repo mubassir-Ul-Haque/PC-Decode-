@@ -10,9 +10,9 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     const lenis = new Lenis({
       lerp: 0.04, // This creates an extremely smooth, heavy, "buttery" friction
       wheelMultiplier: 0.5, // Slows down desktop mouse wheel
-      touchMultiplier: 0.25, // Extremely reduced so one swipe barely moves the page down
+      touchMultiplier: 0.1, // Drastically cut down to 0.1 to make mobile scrolling ultra slow
       syncTouch: true, // Forces touch to use Lenis smoothing
-      syncTouchLerp: 0.04, // Matches the heavy friction for touch
+      syncTouchLerp: 0.02, // Lower lerp means it drags even heavier on touch
     });
 
     // Synchronize Lenis scrolling with GSAP's ScrollTrigger
