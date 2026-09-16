@@ -40,11 +40,11 @@ export function TrustStrip() {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-heading text-base font-bold text-white tracking-tight">
+                    <h3 className="font-heading text-lg font-semibold text-white tracking-tight uppercase">
                       {item.title}
                     </h3>
                   </div>
-                  <p className="text-xs text-[#a0a3a9] mt-1 leading-relaxed">
+                  <p className="text-sm font-medium text-white/50 mt-1.5 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>

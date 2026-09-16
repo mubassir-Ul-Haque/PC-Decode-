@@ -34,7 +34,8 @@ export function FinalCTASection({ onBookClick, onTalkClick }: FinalCTASectionPro
         <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
           <button
             onClick={onBookClick}
-            className="bg-[#d9ff3d] hover:bg-[#cbf72b] text-[#0d0f12] font-heading font-bold text-base rounded-full px-8 py-4 flex items-center gap-2.5 shadow-lg transition-all cursor-pointer active:scale-95"
+            data-cursor="start"
+            className="btn-directional bg-[#d9ff3d] text-[#0d0f12] font-heading font-bold text-base rounded-full px-8 py-4 flex items-center gap-2.5 shadow-lg transition-all cursor-pointer"
             id="final-cta-book-service"
           >
             <span>Book a Service</span>
@@ -43,7 +44,7 @@ export function FinalCTASection({ onBookClick, onTalkClick }: FinalCTASectionPro
 
           <button
             onClick={onTalkClick}
-            className="bg-white/10 hover:bg-white/20 text-white font-heading font-semibold text-base rounded-full px-7 py-4 border border-white/20 flex items-center gap-2.5 transition-all cursor-pointer"
+            className="btn-directional bg-white/10 text-white font-heading font-semibold text-base rounded-full px-7 py-4 border border-white/20 flex items-center gap-2.5 transition-all cursor-pointer"
             id="final-cta-whatsapp-us"
           >
             <MessageSquare className="w-4 h-4 text-[#d9ff3d]" />

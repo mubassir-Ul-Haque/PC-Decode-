@@ -172,7 +172,8 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
               <button
                 type="button"
                 onClick={onStartCourier}
-                className="w-full bg-[#d9ff3d] hover:bg-[#cbf229] text-black font-heading font-bold text-xs sm:text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer active:scale-95"
+                data-cursor="start"
+                className="btn-directional w-full bg-[#d9ff3d] text-black font-heading font-bold text-xs sm:text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
                 id="courier-book-now"
               >
                 <span>Send Your PC</span>
@@ -216,7 +217,8 @@ export function CourierSection({ onStartCourier, onOpenPackingGuide }: CourierSe
             </button>
             <button
               onClick={onStartCourier}
-              className="bg-[#0d0f12] hover:bg-[#202228] text-white text-xs sm:text-sm font-semibold rounded-full px-6 py-3 flex items-center gap-2 shadow cursor-pointer transition-all"
+              data-cursor="start"
+              className="btn-directional bg-[#0d0f12] text-white text-xs sm:text-sm font-semibold rounded-full px-6 py-3 flex items-center gap-2 shadow cursor-pointer transition-all"
             >
               <span>Send Your PC</span>
               <ArrowRight className="w-4 h-4 text-[#d9ff3d]" />

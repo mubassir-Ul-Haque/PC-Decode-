@@ -58,27 +58,27 @@ export function Footer({ onBookClick, onOpenPackingGuide, onOpenContact }: Foote
             </h4>
             <ul className="space-y-2.5 text-sm text-[#b0b4be]">
               <li>
-                <button onClick={() => scrollTo('#services')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#services')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   Deep Cleaning
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollTo('#services')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#services')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   Thermal Paste / Maintenance
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollTo('#services')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#services')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   Hardware Diagnostics
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollTo('#services')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#services')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   GPU & Motherboard Repair
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollTo('#services')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#services')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   Full Tune-up & Inspection
                 </button>
               </li>
@@ -92,27 +92,27 @@ export function Footer({ onBookClick, onOpenPackingGuide, onOpenContact }: Foote
             </h4>
             <ul className="space-y-2.5 text-sm text-[#b0b4be]">
               <li>
-                <button onClick={() => scrollTo('#why-us')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#why-us')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   Why PCDecode
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollTo('#how-it-works')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#how-it-works')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   How It Works
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollTo('#results')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#results')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   Technical Results
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollTo('#courier')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#courier')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   Courier Service
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollTo('#reviews')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => scrollTo('#reviews')} className="link-directional hover:text-white transition-colors cursor-pointer text-left">
                   Customer Reviews
                 </button>
               </li>
@@ -152,13 +152,14 @@ export function Footer({ onBookClick, onOpenPackingGuide, onOpenContact }: Foote
               <div className="pt-3 flex flex-wrap gap-2">
                 <button
                   onClick={onBookClick}
-                  className="bg-[#d9ff3d] hover:bg-[#cbf72b] text-black font-semibold px-3 py-1.5 rounded-lg text-xs transition-colors cursor-pointer"
+                  data-cursor="start"
+                  className="btn-directional bg-[#d9ff3d] text-black font-semibold px-4 py-2 rounded-lg text-xs transition-colors cursor-pointer"
                 >
                   Book a Service
                 </button>
                 <button
                   onClick={onOpenPackingGuide}
-                  className="bg-white/10 hover:bg-white/20 text-white font-medium px-3 py-1.5 rounded-lg text-xs transition-colors cursor-pointer border border-white/10"
+                  className="btn-directional bg-white/10 text-white font-medium px-4 py-2 rounded-lg text-xs transition-colors cursor-pointer border border-white/10"
                 >
                   Packing Guide
                 </button>

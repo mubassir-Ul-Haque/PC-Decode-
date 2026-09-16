@@ -41,17 +41,12 @@ export function WhyUsSection() {
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
         
         {/* Header Block */}
-        <div className="max-w-[800px]">
-          <span className="inline-block text-xs font-mono font-bold tracking-wider text-[#6f6e6a] uppercase">
-            HOW WE WORK
-          </span>
-
-          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0d0f12] mt-3 leading-tight">
-            Because <span className="bg-[#d9ff3d] px-2 py-0.5 rounded text-[#0d0f12]">"just replace it, ভাই"</span> <br className="hidden sm:inline" />
-            is usually bad advice.
+        <div className="max-w-[1000px] mb-12">
+          <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tighter text-[#0d0f12] leading-[1.1] uppercase mb-8">
+            Because <span className="inline-block bg-[#0d0f12] text-[#d9ff3d] px-3 py-1 sm:px-4 sm:py-2 rounded-sm mx-1 shadow-lg leading-none transform -translate-y-1">"just replace it, ভাই"</span><br className="hidden sm:block"/>
+            <span className="text-[#0d0f12]/40">is usually bad advice.</span>
           </h2>
-
-          <p className="text-base sm:text-lg text-[#44464c] mt-5 leading-relaxed">
+          <p className="text-sm sm:text-base text-[#0d0f12]/70 leading-relaxed max-w-[600px] font-medium border-l border-[#0d0f12]/10 pl-6">
             Your PC is a significant investment. You shouldn't have to pay for replacement parts you don't actually need. That's why we diagnose first, explain what's happening, and only recommend the work your PC actually needs.
           </p>
         </div>
@@ -65,11 +60,6 @@ export function WhyUsSection() {
                 key={reason.num}
                 className="bg-white rounded-2xl border border-[#e8e6e1] p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-md transition-shadow relative overflow-hidden group"
               >
-                {/* Number watermark */}
-                <span className="absolute top-4 right-4 font-mono text-3xl font-bold text-[#e8e6e1] group-hover:text-[#0d0f12]/15 transition-colors">
-                  {reason.num}
-                </span>
-
                 <div>
                   <div className="w-11 h-11 rounded-xl bg-[#0d0f12] text-[#d9ff3d] flex items-center justify-center mb-5 shadow-xs">
                     <IconComp className="w-5 h-5 stroke-[2.2]" />

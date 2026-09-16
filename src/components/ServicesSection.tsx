@@ -96,14 +96,11 @@ export function ServicesSection({ onSelectService }: ServicesSectionProps) {
       <div className="hidden lg:block">
         <div ref={triggerRef} className="h-screen w-full flex flex-col justify-between py-8 px-8 overflow-hidden relative">
           
-          <div className="w-full max-w-[1400px] mx-auto flex items-end justify-between border-b border-[#e8e6e1] pb-5 z-20">
-            <div>
-              <div className="inline-flex items-center gap-2 border border-[#d8d5cb] bg-white rounded-full px-3 py-1 text-xs font-mono font-bold text-[#0d0f12] uppercase tracking-wider shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-[#d9ff3d] inline-block animate-pulse"></span>
-                <span>PINPOINT PRECISION SERVICES</span>
-              </div>
-              <h2 className="font-heading text-3xl xl:text-4xl font-bold tracking-tight text-[#0d0f12] mt-2">
-                Focused on diagnosis, restoration & component-level repair.
+          <div className="w-full max-w-[1400px] mx-auto flex flex-col justify-end border-b border-[#e8e6e1] pb-6 z-20">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-2">
+              <h2 className="font-heading text-3xl sm:text-4xl xl:text-[3.5rem] font-semibold tracking-tighter text-[#0d0f12] leading-[1.05] uppercase max-w-[800px]">
+                Diagnosis, restoration, <br/>
+                <span className="text-[#0d0f12]/40">& Component-level repair.</span>
               </h2>
             </div>
           </div>
@@ -119,17 +116,15 @@ export function ServicesSection({ onSelectService }: ServicesSectionProps) {
                 return (
                   <div
                     key={service.id}
-                    className={`w-[780px] xl:w-[860px] shrink-0 h-[480px] xl:h-[520px] rounded-[28px] p-7 xl:p-8 bg-white border transition-all duration-500 ease-out flex flex-col justify-between relative overflow-hidden group ${
+                    data-cursor="explore"
+                    className={`w-[780px] xl:w-[860px] shrink-0 h-[480px] xl:h-[520px] rounded-[28px] p-7 xl:p-8 bg-white border transition-all duration-700 ease-out flex flex-col justify-between relative overflow-hidden group ${
                       isActive
-                        ? 'border-[#d8d5cb] shadow-[0_15px_40px_rgba(0,0,0,0.06)] scale-100 opacity-100'
-                        : 'border-[#e8e6e1] scale-[0.95] opacity-60 hover:opacity-100'
+                        ? 'border-[#d8d5cb] shadow-[0_20px_50px_rgba(0,0,0,0.08)] scale-100 opacity-100'
+                        : 'border-[#e8e6e1] scale-[0.88] opacity-30 hover:opacity-70'
                     }`}
                   >
                     <div className="flex items-center justify-between z-10">
                       <div className="flex items-center gap-3">
-                        <span className="font-mono text-xs font-bold text-[#0d0f12] bg-[#f0eee6] px-2.5 py-1 rounded-md border border-[#e8e6e1]">
-                          0{service.number}
-                        </span>
                         <span className="text-xs font-mono font-bold tracking-wider text-[#64676d] uppercase">
                           {service.eyebrow || service.tagline}
                         </span>
@@ -172,16 +167,24 @@ export function ServicesSection({ onSelectService }: ServicesSectionProps) {
                       </div>
 
                       <div className="col-span-5 h-[280px] xl:h-[310px] rounded-2xl overflow-hidden relative border border-[#e8e6e1] group-hover:border-[#d8d5cb] transition-all bg-[#faf9f6]">
-                        {service.beforeAfter ? (
-                           <AutoBeforeAfter beforeImg={service.beforeAfter.beforeImg} afterImg={service.beforeAfter.afterImg} />
-                        ) : service.image ? (
-                          <img
-                            src={service.image}
-                            alt={service.title}
-                            className="w-full h-full object-cover select-none transition-transform duration-700 ease-out group-hover:scale-105"
-                            loading="lazy"
-                          />
-                        ) : null}
+                        <div 
+                          className="w-full h-full transition-all duration-1000 ease-out"
+                          style={{
+                            clipPath: isActive ? 'inset(0% 0% 0% 0% round 16px)' : 'inset(10% 10% 10% 10% round 16px)',
+                            transform: isActive ? 'scale(1) translateX(0)' : 'scale(1.1) translateX(20px)'
+                          }}
+                        >
+                          {service.beforeAfter ? (
+                             <AutoBeforeAfter beforeImg={service.beforeAfter.beforeImg} afterImg={service.beforeAfter.afterImg} />
+                          ) : service.image ? (
+                            <img
+                              src={service.image}
+                              alt={service.title}
+                              className="w-full h-full object-cover select-none transition-transform duration-700 ease-out group-hover:scale-105"
+                              loading="lazy"
+                            />
+                          ) : null}
+                        </div>
                       </div>
                     </div>
 
@@ -193,7 +196,7 @@ export function ServicesSection({ onSelectService }: ServicesSectionProps) {
                       <button
                         type="button"
                         onClick={() => onSelectService(service.title)}
-                        className="bg-[#0d0f12] hover:bg-[#202227] text-white font-semibold text-xs xl:text-sm rounded-full px-6 py-2.5 flex items-center gap-2 transition-all cursor-pointer shadow-md active:scale-95 group/btn hover:-translate-y-0.5"
+                        className="btn-directional bg-[#0d0f12] text-white font-semibold text-xs xl:text-sm rounded-full px-6 py-2.5 flex items-center gap-2 transition-all cursor-pointer shadow-md group/btn"
                       >
                         <span>{service.ctaText || 'Book Service'}</span>
                         <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
@@ -228,13 +231,10 @@ export function ServicesSection({ onSelectService }: ServicesSectionProps) {
       </div>
 
       <div className="block lg:hidden py-14 px-4 sm:px-6">
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-2 border border-[#d8d5cb] bg-white rounded-full px-3 py-1 text-xs font-mono font-bold text-[#0d0f12] uppercase tracking-wider shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-[#d9ff3d] inline-block animate-pulse"></span>
-            <span>OUR SERVICES</span>
-          </div>
-          <h2 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-[#0d0f12] mt-3 leading-tight">
-            Focused on diagnosis, maintenance & precision repair.
+        <div className="mb-10">
+          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tighter text-[#0d0f12] leading-[1.05] uppercase">
+            Diagnosis, restoration, <br/>
+            <span className="text-[#0d0f12]/40">& Component repair.</span>
           </h2>
         </div>
 
@@ -275,8 +275,8 @@ export function ServicesSection({ onSelectService }: ServicesSectionProps) {
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-xs font-bold text-[#0d0f12] bg-[#f0eee6] px-2 py-0.5 rounded border border-[#e8e6e1]">
-                      0{service.number}
+                    <span className="text-xs font-mono font-bold tracking-wider text-[#64676d] uppercase">
+                      {service.eyebrow || service.tagline}
                     </span>
                     <span className="text-xs font-mono font-bold text-[#0d0f12] bg-white border border-[#d8d5cb] px-2.5 py-0.5 rounded-full shadow-sm">
                       {service.startingPrice}

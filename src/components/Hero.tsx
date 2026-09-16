@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { ArrowRight, ShieldCheck, CheckCircle2, Star } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ArrowRight, ShieldCheck, CheckCircle2, Star, MessageSquare } from 'lucide-react';
 import { AutoBeforeAfter } from './AutoBeforeAfter';
+import gsap from 'gsap';
 
 interface HeroProps {
   onBookClick: () => void;
-  onExploreClick: () => void; // Kept for interface compatibility with App.tsx
+  onExploreClick: () => void;
 }
 
 const HERO_CASES = [
@@ -32,10 +33,66 @@ const HERO_CASES = [
 
 export function Hero({ onBookClick }: HeroProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isMounted, setIsMounted] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    setIsMounted(true);
+    // Initial GSAP animation sequence
+    if (!heroRef.current) return;
+    
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      // 1. Background appears
+      tl.fromTo('.hero-bg-svg', { opacity: 0 }, { opacity: 0.2, duration: 1.5 }, 0.2);
+
+      // 2. Headline reveals through mask
+      tl.fromTo('.hero-headline-line', 
+        { y: '100%', opacity: 0 }, 
+        { y: '0%', opacity: 1, duration: 1, stagger: 0.15 }, 
+        0.4
+      );
+
+      // 3. Supporting label
+      tl.fromTo('.hero-case-label',
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8 },
+        0.75
+      );
+
+      // 4. Hero description copy
+      tl.fromTo('.hero-copy',
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8 },
+        0.9
+      );
+
+      // 5. CTAs appear
+      tl.fromTo('.hero-cta',
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1 },
+        1.05
+      );
+
+      // 5. Main visual settles
+      tl.fromTo('.hero-visual',
+        { clipPath: 'inset(15% 15% 15% 15% round 16px)', scale: 1.05, opacity: 0, x: 20 },
+        { clipPath: 'inset(0% 0% 0% 0% round 16px)', scale: 1, opacity: 1, x: 0, duration: 1.2, ease: 'power3.inOut' },
+        0.6
+      );
+      
+      // 6. Trust strip
+      tl.fromTo('.hero-trust-strip',
+        { opacity: 0 },
+        { opacity: 1, duration: 1 },
+        1.2
+      );
+
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % HERO_CASES.length);
     }, 4500);
@@ -45,28 +102,33 @@ export function Hero({ onBookClick }: HeroProps) {
   const currentCase = HERO_CASES[activeIndex];
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#faf9f6] pt-12 pb-0 md:pt-16 md:pb-0 border-b border-[#e8e6e1]">
+    <section ref={heroRef} className="relative w-full overflow-hidden bg-[#faf9f6] pt-12 pb-0 md:pt-16 md:pb-0 border-b border-[#e8e6e1]">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center pb-12 md:pb-16">
           
           {/* LEFT SIDE: STORY + CTA */}
-          <div className="lg:col-span-6 flex flex-col items-start z-10">
-            <div
-              className={`transition-all duration-700 ease-out ${
-                isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
-              <h1 className="font-heading text-[2.5rem] sm:text-[3.5rem] lg:text-[4rem] font-bold tracking-tight text-[#0d0f12] leading-[1.05] uppercase">
-                PC PROBLEMS?<br />
-                WE FIND THE REAL CAUSE.
+          <div className="lg:col-span-6 flex flex-col items-start z-10 py-4 relative">
+            {/* SVG Background Decoration */}
+            <div className="hero-bg-svg absolute -z-10 top-[-20%] left-[-10%] opacity-0 pointer-events-none w-[300px] h-[300px]">
+              <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#0d0f12" strokeWidth="0.5"/>
+                  </pattern>
+                </defs>
+                <rect width="100" height="100" fill="url(#grid)" />
+              </svg>
+            </div>
+
+            <div className="relative pb-2">
+              <h1 className="font-heading text-[36px] sm:text-[48px] lg:text-[64px] font-semibold tracking-tighter text-[#0d0f12] leading-[1.05] uppercase">
+                <div className="overflow-hidden"><span className="hero-headline-line block">PC PROBLEMS?</span></div>
+                <div className="overflow-hidden"><span className="hero-headline-line block text-[#0d0f12]/70">WE FIND THE</span></div>
+                <div className="overflow-hidden"><span className="hero-headline-line block">REAL CAUSE.</span></div>
               </h1>
             </div>
 
-            <div
-              className={`mt-4 sm:mt-5 h-[36px] sm:h-[44px] overflow-hidden flex items-center transition-all duration-700 delay-150 ease-out ${
-                isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
+            <div className="hero-case-label mt-6 sm:mt-8 h-[36px] sm:h-[44px] overflow-hidden flex items-center opacity-0">
               <span
                 key={activeIndex}
                 className="inline-block text-[#0d0f12] font-mono text-xl sm:text-2xl font-bold bg-[#d9ff3d] px-3.5 py-1.5 rounded-md animate-fadeIn"
@@ -75,55 +137,38 @@ export function Hero({ onBookClick }: HeroProps) {
               </span>
             </div>
 
-            <p
-              className={`text-base sm:text-lg text-[#4a4d53] mt-6 leading-relaxed max-w-[540px] transition-all duration-700 delay-300 ease-out ${
-                isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
-              From cleaning and thermal maintenance to hardware diagnosis and repair — we find the problem first, explain it clearly, then fix it properly.
-            </p>
+            <div className="hero-copy mt-5 max-w-[560px] opacity-0">
+              <p className="text-sm sm:text-base text-[#0d0f12]/75 leading-relaxed font-medium">
+                From cleaning and thermal maintenance to hardware diagnosis and repair — we find the problem first, explain it clearly, then fix it properly.
+              </p>
+            </div>
 
             {/* CTAs */}
-            <div
-              className={`mt-8 flex flex-wrap items-center gap-3.5 transition-all duration-700 delay-400 ease-out ${
-                isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-            >
+            <div className="mt-8 flex flex-wrap items-center gap-3.5">
               <button
                 onClick={onBookClick}
-                className="bg-[#0d0f12] hover:bg-[#202227] text-white font-semibold text-base rounded-full px-8 py-3.5 flex items-center gap-2.5 shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95 group hover:-translate-y-0.5"
+                data-cursor="start"
+                className="hero-cta opacity-0 bg-[#0d0f12] text-white font-semibold text-base rounded-full px-8 py-3.5 flex items-center gap-2.5 shadow-md transition-all cursor-pointer active:scale-95 btn-directional"
               >
                 <span>Book a Service</span>
-                <ArrowRight className="w-4 h-4 text-[#d9ff3d] transition-transform duration-300 group-hover:translate-x-1.5" />
+                <ArrowRight className="w-4 h-4 text-[#d9ff3d]" />
               </button>
 
               <a
                 href="https://wa.me/8801700000000?text=Hello%20PCDecode!%20I%20need%20a%20consultation%20about%20my%20PC."
                 target="_blank"
                 rel="noreferrer"
-                className="border border-[#cfccc3] hover:border-[#0d0f12] bg-white hover:bg-[#faf9f6] text-[#0d0f12] font-semibold text-base rounded-full px-7 py-3.5 flex items-center gap-2 transition-all cursor-pointer shadow-xs hover:-translate-y-0.5 active:scale-95"
+                data-cursor="click"
+                className="hero-cta opacity-0 border border-[#cfccc3] bg-white text-[#0d0f12] font-semibold text-base rounded-full px-7 py-3.5 flex items-center gap-2 transition-all cursor-pointer shadow-xs active:scale-95 btn-directional overflow-hidden"
               >
-                <span>WhatsApp Us</span>
+                <MessageSquare className="w-4 h-4 text-[#0d0f12] z-10 relative" />
+                <span className="z-10 relative">WhatsApp Us</span>
               </a>
-            </div>
-
-            {/* Compact Trust Statement */}
-            <div
-              className={`mt-6 flex items-center gap-2 text-[13px] font-medium text-[#64676d] transition-all duration-700 delay-500 ease-out ${
-                isMounted ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <CheckCircle2 className="w-4 h-4 text-[#0d0f12] opacity-80 shrink-0" />
-              <span>Diagnose first • Customer approval • Test before return</span>
             </div>
           </div>
 
           {/* RIGHT SIDE: PROOF & REVIEW */}
-          <div
-            className={`lg:col-span-6 flex flex-col gap-5 lg:pl-6 transition-all duration-1000 delay-300 ease-out ${
-              isMounted ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-6'
-            }`}
-          >
+          <div className="hero-visual lg:col-span-6 flex flex-col gap-5 lg:pl-6 opacity-0">
             {/* Visual Work Proof */}
             <div className="w-full h-[280px] sm:h-[340px] lg:h-[360px] rounded-2xl bg-white shadow-[0_15px_40px_rgba(0,0,0,0.06)] border border-[#e8e6e1] relative overflow-hidden">
               <AutoBeforeAfter 
@@ -131,7 +176,7 @@ export function Hero({ onBookClick }: HeroProps) {
                 afterImg="https://storage.googleapis.com/banani-generated-images/generated-images/b6b9b53a-5fff-49d0-a30a-12e1da5683d3.jpg"
               />
               {/* Subtle Floating Label */}
-              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur border border-[#e8e6e1] px-3 py-1.5 rounded-full shadow-sm flex items-center gap-2 z-30">
+              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur border border-[#e8e6e1] px-3 py-1.5 rounded-full shadow-sm flex items-center gap-2 z-30 pointer-events-none">
                 <span className="w-2 h-2 rounded-full bg-[#d9ff3d] inline-block animate-pulse"></span>
                 <span className="font-mono text-[10px] font-bold text-[#0d0f12] tracking-wider uppercase">Real Service Work</span>
               </div>
@@ -160,7 +205,7 @@ export function Hero({ onBookClick }: HeroProps) {
       </div>
       
       {/* HORIZONTAL TRUST STRIP */}
-      <div className={`border-t border-[#e8e6e1] bg-white py-4 sm:py-5 transition-all duration-1000 delay-500 ease-out ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="hero-trust-strip border-t border-[#e8e6e1] bg-white py-4 sm:py-5 opacity-0">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
            <div className="flex flex-wrap items-center justify-between gap-4 text-xs sm:text-sm font-semibold text-[#0d0f12]">
              <div className="flex items-center gap-2">

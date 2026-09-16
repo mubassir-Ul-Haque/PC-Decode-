@@ -1,12 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { ThermometerSun, Volume2, Gamepad2, AlertCircle, PowerOff, Gauge, RefreshCcw, VolumeX, ArrowRight } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import diagnosticImg1 from '../assets/images/pc_diagnostic_bench_1789496807097.jpg';
 import diagnosticImg2 from '../assets/images/pc_thermal_repair_1789496825583.jpg';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ProblemIntroProps {
   onBookClick: () => void;
 }
 
+// ... keeping HEADLINES and SYMPTOMS as is ...
 const HEADLINES = [
   'Making Weird Sounds?',
   'Running Unusually Hot?',
@@ -93,6 +98,8 @@ export function ProblemIntro({ onBookClick }: ProblemIntroProps) {
   const [headlineIndex, setHeadlineIndex] = useState(0);
   const [activeSymptom, setActiveSymptom] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -101,46 +108,59 @@ export function ProblemIntro({ onBookClick }: ProblemIntroProps) {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion || !sectionRef.current || !headerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Create continuity: as this section enters, the header slides up and fades in
+      gsap.fromTo(headerRef.current,
+        { y: 80, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 85%',
+            end: 'top 30%',
+            scrub: 1,
+          }
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const symptom = SYMPTOMS[activeSymptom];
 
   return (
-    <section className="bg-[#faf9f6] py-16 md:py-24 border-b border-[#e8e6e1]">
+    <section ref={sectionRef} className="bg-[#faf9f6] py-16 md:py-24 border-b border-[#e8e6e1] overflow-hidden">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-8">
         {/* Top Header Area */}
-        <div className="mb-12">
-          <h3 className="font-mono text-xs font-bold uppercase tracking-widest text-[#64676d] mb-4">
-            Common PC Problems
-          </h3>
-          
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6">
-            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#0d0f12]">
-              Is your PC
-            </h2>
-            <div className="relative h-[48px] sm:h-[60px] lg:h-[72px] overflow-hidden bg-[#0d0f12] text-[#d9ff3d] rounded-xl px-4 sm:px-6 flex items-center min-w-[280px] sm:min-w-[400px]">
-              <div className="flex items-center gap-3 w-full animate-fadeIn" key={headlineIndex}>
-                <VolumeX className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 text-[#64676d]" />
-                <span className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold truncate">
-                  {HEADLINES[headlineIndex]}
-                </span>
+        <div ref={headerRef} className="mb-12">
+          <div className="flex flex-col mb-8 relative">
+            <h2 className="font-heading text-[2.5rem] sm:text-[3.5rem] lg:text-[4rem] font-semibold tracking-tighter text-[#0d0f12] leading-[1.1] uppercase relative z-10">
+              IS YOUR PC<br />
+              <div className="flex flex-col sm:flex-row sm:items-center mt-2">
+                <div className="relative h-[44px] sm:h-[60px] lg:h-[70px] overflow-hidden bg-[#0d0f12] text-[#d9ff3d] px-4 sm:px-6 flex items-center min-w-[280px] sm:min-w-[450px] inline-flex -rotate-1 rounded-sm shadow-xl">
+                  <div className="flex items-center gap-3 w-full animate-fadeIn" key={headlineIndex}>
+                    <VolumeX className="hidden sm:block w-6 h-6 shrink-0 text-[#d9ff3d]/50" />
+                    <span className="font-heading text-xl sm:text-2xl lg:text-[2.5rem] font-bold truncate tracking-tight">
+                      {HEADLINES[headlineIndex]}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
+            </h2>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs font-mono font-bold uppercase text-[#8b91a0] mb-8">
-            <span className="text-[#0d0f12]">PC Slow</span>
-            <span>»</span>
-            <span>Hot</span>
-            <span>»</span>
-            <span className="text-[#0d0f12] underline decoration-[#d9ff3d] decoration-2 underline-offset-4">Making Weird Sounds</span>
-            <span>»</span>
-            <span className="bg-[#f0eee6] px-2 py-1 rounded text-[#0d0f12]">We Decode It</span>
-          </div>
-
-          <div className="max-w-3xl">
-            <p className="text-base sm:text-lg text-[#4a4d53] leading-relaxed mb-6 font-medium">
+          <div className="max-w-3xl grid grid-cols-1 sm:grid-cols-2 gap-6 items-end">
+            <p className="text-sm sm:text-base text-[#0d0f12]/70 leading-relaxed font-medium">
               Many PC problems look terminal when they happen, but the underlying root cause is often manageable: dust accumulation, dried thermal compound, contact oxidation, or loose cables.
             </p>
-            <div className="inline-block bg-[#d9ff3d] text-[#0d0f12] px-4 py-2 rounded-lg font-mono text-sm font-bold shadow-sm border border-[#c4e636]">
+            <div className="inline-block bg-[#d9ff3d] text-[#0d0f12] px-4 py-3 font-mono text-[11px] uppercase tracking-widest font-bold shadow-sm self-start sm:self-end">
               Diagnose first. Replace only when necessary.
             </div>
           </div>

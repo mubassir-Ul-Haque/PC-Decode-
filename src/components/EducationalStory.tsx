@@ -51,7 +51,7 @@ const formatTitle = (title: string) => {
       return (
         <span
           key={i}
-          className="inline-block bg-[#0d0f12] text-[#d9ff3d] px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-[14px] mx-1.5 sm:mx-2 -translate-y-1 sm:-translate-y-1.5 shadow-md"
+          className="inline-block bg-[#0d0f12] text-[#d9ff3d] px-4 py-1 sm:px-6 sm:py-2 mx-1.5 sm:mx-3 -translate-y-2 sm:-translate-y-3"
         >
           {part.slice(1, -1)}
         </span>
@@ -64,6 +64,7 @@ const formatTitle = (title: string) => {
 export function EducationalStory() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const stageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -81,7 +82,8 @@ export function EducationalStory() {
     };
 
     const ctx = gsap.context(() => {
-      const tween = gsap.to(track, {
+      // Main horizontal track scroll
+      const trackTween = gsap.to(track, {
         x: getScrollAmount,
         ease: 'none',
         scrollTrigger: {
@@ -100,7 +102,31 @@ export function EducationalStory() {
           },
         },
       });
-      return () => tween.kill();
+
+      // Individual stage progressive reveals inside the track
+      stageRefs.current.forEach((stageEl, idx) => {
+        if (!stageEl || idx === 0) return; // Skip first stage as it's already visible
+        const icon = stageEl.querySelector('.story-icon');
+        const title = stageEl.querySelector('.story-title');
+        const desc = stageEl.querySelector('.story-desc');
+        
+        gsap.fromTo([icon, title, desc], 
+          { opacity: 0, x: 100 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: stageEl,
+              containerAnimation: trackTween,
+              start: 'left 75%',
+              toggleActions: 'play none none reverse',
+            }
+          }
+        );
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -113,13 +139,10 @@ export function EducationalStory() {
     >
       <div className="h-screen w-full relative">
         {/* Fixed Header Indicators */}
-        <div className="absolute top-6 sm:top-10 left-6 sm:left-12 right-6 sm:right-12 flex justify-between items-center z-20 pointer-events-none">
-          <div className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#64676d]">
-            What's happening to your PC?
-          </div>
+        <div className="absolute top-6 sm:top-10 left-6 sm:left-12 right-6 sm:right-12 flex justify-end items-center z-20 pointer-events-none">
           <div className="flex items-center gap-3">
-            <div className="font-mono text-[10px] sm:text-sm font-bold">
-              0{activeIndex + 1} <span className="text-[#a0a5b4] mx-1">/</span> 0{STORY_STAGES.length}
+            <div className="font-mono text-[10px] sm:text-xs font-bold tracking-widest text-[#0d0f12]">
+              0{activeIndex + 1} <span className="text-[#0d0f12]/30 mx-1">—</span> 0{STORY_STAGES.length}
             </div>
           </div>
         </div>
@@ -130,24 +153,25 @@ export function EducationalStory() {
           className="h-full flex items-center will-change-transform"
           style={{ width: `${STORY_STAGES.length * 100}vw` }}
         >
-          {STORY_STAGES.map((stage) => (
+          {STORY_STAGES.map((stage, index) => (
             <div
               key={stage.id}
+              ref={(el) => (stageRefs.current[index] = el)}
               className="w-screen h-full flex flex-col items-center justify-center px-4 sm:px-12"
             >
-              <div className="max-w-[900px] text-center flex flex-col items-center">
+              <div className="max-w-[1200px] w-full flex flex-col justify-center h-full">
                 {/* Visual Icon */}
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-[#e8e6e1] bg-white flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] mb-6 sm:mb-10 transition-tactile">
-                  <stage.icon className="w-6 h-6 sm:w-8 sm:h-8 text-[#0d0f12] opacity-80" />
+                <div className="story-icon mb-4 sm:mb-8 transition-tactile">
+                  <stage.icon className="w-8 h-8 sm:w-12 sm:h-12 text-[#0d0f12]" strokeWidth={1.5} />
                 </div>
 
                 {/* Headline */}
-                <h2 className="font-heading text-3xl sm:text-5xl xl:text-[4rem] font-bold uppercase leading-[1.1] sm:leading-[1.1] tracking-tight mb-4 sm:mb-8 px-2">
+                <h2 className="story-title font-heading text-[3rem] sm:text-[3.5rem] lg:text-[4.5rem] font-semibold uppercase leading-[1.1] sm:leading-[1] tracking-tighter mb-8 sm:mb-12">
                   {formatTitle(stage.title)}
                 </h2>
 
                 {/* Description */}
-                <p className="text-base sm:text-xl xl:text-2xl text-[#4a4d53] leading-relaxed max-w-[700px] font-medium px-4">
+                <p className="story-desc text-lg sm:text-2xl lg:text-3xl text-[#0d0f12]/70 leading-[1.4] max-w-[800px] font-medium">
                   {stage.desc}
                 </p>
               </div>

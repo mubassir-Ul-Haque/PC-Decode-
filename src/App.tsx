@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BookingFormData } from './types';
+import { CustomCursor } from './components/CustomCursor';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TrustStrip } from './components/TrustStrip';
@@ -48,6 +49,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#0d0f12] flex flex-col font-sans selection:bg-[#d9ff3d] selection:text-black">
       
+      <CustomCursor />
+
       {/* 01. NAVBAR (Rounded Glassmorphic with 2 CTAs) */}
       <Navbar onBookClick={() => scrollToBooking()} />
 
@@ -58,16 +61,16 @@ export default function App() {
           onExploreClick={scrollToServices}
         />
 
-        {/* 03. TRUST STRIP */}
-        <TrustStrip />
-
-        {/* 04. PROBLEM INTRO / SYMPTOMS */}
-        <ProblemIntro onBookClick={() => scrollToBooking('Hardware Diagnostics')} />
-
-        {/* 05. EDUCATIONAL STORY */}
+        {/* 03. EDUCATIONAL STORY */}
         <EducationalStory />
 
-        {/* 05. SERVICES */}
+        {/* 04. TRUST STRIP */}
+        <TrustStrip />
+
+        {/* 05. PROBLEM INTRO / SYMPTOMS */}
+        <ProblemIntro onBookClick={() => scrollToBooking('Hardware Diagnostics')} />
+
+        {/* 06. SERVICES */}
         <ServicesSection
           onSelectService={(serviceName) => scrollToBooking(serviceName)}
         />
